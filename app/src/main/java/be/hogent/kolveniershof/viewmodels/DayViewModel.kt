@@ -2,25 +2,21 @@ package be.hogent.kolveniershof.viewmodels
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
-import be.hogent.kolveniershof.api.KolvApi
-import be.hogent.kolveniershof.base.BaseViewModel
+import androidx.lifecycle.ViewModel
 import be.hogent.kolveniershof.model.Workday
+import be.hogent.kolveniershof.repository.KolvRepository
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-import javax.inject.Inject
-
-class DayViewModel : BaseViewModel() {
+class DayViewModel(val repo: KolvRepository) : ViewModel() {
 
     val workdays = MutableLiveData<List<Workday>>()
     val workday = MutableLiveData<Workday>()
     val loadingVisibility = MutableLiveData<Int>()
     val objectVisibility = MutableLiveData<Int>()
 
-    @Inject
-    lateinit var kolvApi: KolvApi
     private var disposables = CompositeDisposable()
 
     init {

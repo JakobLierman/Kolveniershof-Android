@@ -2,23 +2,21 @@ package be.hogent.kolveniershof.viewmodels
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import be.hogent.kolveniershof.api.KolvApi
-import be.hogent.kolveniershof.base.BaseViewModel
 import be.hogent.kolveniershof.model.User
+import be.hogent.kolveniershof.repository.KolvRepository
 import com.orhanobut.logger.Logger
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
-import javax.inject.Inject
 import javax.security.auth.login.LoginException
 
-class UserViewModel : BaseViewModel() {
+class UserViewModel(val repo: KolvRepository) : ViewModel() {
 
     val user = MutableLiveData<User>()
     val loadingVisibility = MutableLiveData<Int>()
     val contentEnabled = MutableLiveData<Boolean>()
 
-    @Inject
-    lateinit var kolvApi: KolvApi
     private var disposables = CompositeDisposable()
 
     init {
