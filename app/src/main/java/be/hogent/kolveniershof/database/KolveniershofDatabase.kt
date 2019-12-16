@@ -15,7 +15,7 @@ import be.hogent.kolveniershof.database.databaseModels.*
 
 @Database(entities = [DatabaseActivity::class, DatabaseActivityUnit::class, DatabaseBus::class,
     DatabaseBusUnit::class, DatabaseLunchUnit::class, DatabaseUser::class,
-    DatabaseWorkday::class, DatabaseActivityUnitUserJOIN::class],
+    DatabaseWorkday::class, DatabaseActivityUnitUserJOIN::class, DatabaseBusUnitUserJOIN::class],
     version = 1, exportSchema = true)
 abstract class KolveniershofDatabase  : RoomDatabase() {
     abstract fun ActivityUnitDao() : ActivityUnitDao
