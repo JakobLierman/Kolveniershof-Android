@@ -21,7 +21,7 @@ interface KolvApi {
     fun login(
         @Field("email") email: String,
         @Field("password") password: String
-    ): Single<User>
+    ): Single<NetworkUser>
 
     /**
      * Checks is email is valid and unique

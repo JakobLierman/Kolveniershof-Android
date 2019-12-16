@@ -4,14 +4,15 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import be.hogent.kolveniershof.api.KolvApi
-import be.hogent.kolveniershof.model.User
+import be.hogent.kolveniershof.domain.User
 import be.hogent.kolveniershof.repository.KolvRepository
+import be.hogent.kolveniershof.repository.UserRepository
 import com.orhanobut.logger.Logger
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 import javax.security.auth.login.LoginException
 
-class UserViewModel(val repo: KolvRepository) : ViewModel() {
+class UserViewModel(val repo: UserRepository) : ViewModel() {
 
     val user = MutableLiveData<User>()
     val loadingVisibility = MutableLiveData<Int>()
@@ -34,9 +35,7 @@ class UserViewModel(val repo: KolvRepository) : ViewModel() {
     fun login(email: String, password: String): User {
         try {
             onRetrieveStart()
-            return kolvApi.login(email, password)
-                .doOnError { error -> onRetrieveError(error) }
-                .blockingGet()
+            return repo.login(email, password)
 
         } catch (e: Exception) {
             throw LoginException((e as HttpException).response()!!.errorBody()!!.string())
