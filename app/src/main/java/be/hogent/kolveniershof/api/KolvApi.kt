@@ -2,6 +2,7 @@ package be.hogent.kolveniershof.api
 
 import be.hogent.kolveniershof.model.User
 import be.hogent.kolveniershof.model.Workday
+import be.hogent.kolveniershof.network.NetworkUser
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.*
@@ -39,7 +40,7 @@ interface KolvApi {
      * @return user
      */
     @GET("users/{email}")
-    fun getUserByEmail(@Path("email") email: String): Observable<User>
+    fun getUserByEmail(@Path("email") email: String): Observable<NetworkUser>
 
     /**
      * Gets user by id
@@ -48,7 +49,7 @@ interface KolvApi {
      * @return user
      */
     @GET("users/id/{id}")
-    fun getUserById(@Path("id") id: String): Observable<User>
+    fun getUserById(@Path("id") id: String): Observable<NetworkUser>
 
     /**
      * Gets workdays

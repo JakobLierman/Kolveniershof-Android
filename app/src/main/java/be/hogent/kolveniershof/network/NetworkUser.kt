@@ -69,23 +69,24 @@ data class NetworkUser(
     val imgUrl: String? = null,
     @field:Json(name = "token")
     val token: String? = null
-)
+) {
 
+    companion object {
 
-fun NetworkUserContainer.asDomainModel(): List<User> {
-    return users.map {
-        User(
-            id = it.id,
-            firstName = it.firstName,
-            lastName = it.lastName,
-            email = it.email,
-            isAdmin = it.isAdmin,
-            birthday = it.birthday,
-            absentDates = it.absentDates,
-            imgUrl = it.imgUrl,
-            token = it.token
-        )
+        fun asDomainModel(user : NetworkUser): User {
+            return User(
+                    id = user.id,
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    email = user.email,
+                    isAdmin = user.isAdmin,
+                    birthday = user.birthday,
+                    absentDates = user.absentDates,
+                    imgUrl = user.imgUrl,
+                    token = user.token
+                )
+            }
+        }
     }
-}
 
 
