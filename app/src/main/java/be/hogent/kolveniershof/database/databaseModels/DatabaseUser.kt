@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import be.hogent.kolveniershof.domain.User
+import org.joda.time.DateTime
 import java.util.*
 
 @Entity(tableName = "user_table")
@@ -30,4 +31,13 @@ data class DatabaseUser constructor(
     var imgUrl: String? = null,
     @ColumnInfo(name = "user_token")
     var token: String? = null
-)
+){
+    companion object {
+
+        fun toUser(dbuser: DatabaseUser): User {
+            val user = User(dbuser.userId, dbuser.firstName, dbuser.lastName, dbuser.email, dbuser.isAdmin, Date(dbuser.birthday), mutableListOf(), dbuser.imgUrl, dbuser.token)
+            return user
+        }
+    }
+}
+
