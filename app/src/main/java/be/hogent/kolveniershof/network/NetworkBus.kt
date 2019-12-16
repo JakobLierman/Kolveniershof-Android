@@ -1,11 +1,9 @@
 package be.hogent.kolveniershof.network
 
-import android.os.Parcelable
-import be.hogent.kolveniershof.database.DatabaseBus
+import be.hogent.kolveniershof.database.databaseModels.DatabaseBus
 import be.hogent.kolveniershof.domain.Bus
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
 
 /**
  * Bus entity
@@ -59,14 +57,5 @@ fun NetworkBusContainer.asDomainModel(): List<Bus> {
     }
 }
 
-fun NetworkBusContainer.asDatabaseModel(): Array<DatabaseBus> {
-    return busses.map {
-        DatabaseBus(
-            id = it.id,
-            name = it.name,
-            color = it.color,
-            iconUrl = it.iconUrl
-        )
-    }.toTypedArray()
-}
+
 

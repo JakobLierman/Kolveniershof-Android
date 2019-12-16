@@ -1,14 +1,11 @@
 package be.hogent.kolveniershof.network
 
-import android.os.Parcelable
-import be.hogent.kolveniershof.database.DatabaseActivityUnit
-import be.hogent.kolveniershof.database.DatabaseUser
+import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnit
 import be.hogent.kolveniershof.domain.Activity
 import be.hogent.kolveniershof.domain.ActivityUnit
 import be.hogent.kolveniershof.domain.User
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
 
 /**
  * ActivityUnit entity
@@ -65,13 +62,3 @@ fun NetworkActivityUnitContainer.asDomainModel(): List<ActivityUnit> {
     }
 }
 
-fun NetworkActivityUnitContainer.asDatabaseModel(): Array<DatabaseActivityUnit> {
-    return activityUnits.map {
-        DatabaseActivityUnit(
-            id = it.id,
-            activity = it.activity,
-            mentors = it.mentors,
-            clients = it.clients
-        )
-    }.toTypedArray()
-}

@@ -1,12 +1,10 @@
 package be.hogent.kolveniershof.network
 
 
-import android.os.Parcelable
-import be.hogent.kolveniershof.database.DatabaseWorkday
+import be.hogent.kolveniershof.database.databaseModels.DatabaseWorkday
 import be.hogent.kolveniershof.domain.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 /**
@@ -92,22 +90,7 @@ fun NetworkWorkdayContainer.asDomainModel(): List<Workday> {
     }
 }
 
-fun NetworkWorkdayContainer.asDatabaseModel(): Array<DatabaseWorkday> {
-    return workdays.map {
-        DatabaseWorkday(
-            id = it.id,
-            date = it.date,
-            daycareMentors = it.daycareMentors,
-            morningBusses = it.morningBusses,
-            amActivities = it.amActivities,
-            lunch = it.lunch,
-            pmActivities = it.pmActivities,
-            eveningBusses = it.eveningBusses,
-            isHoliday = it.isHoliday,
-            comments = it.comments
-        )
-    }.toTypedArray()
-}
+
 
 
 

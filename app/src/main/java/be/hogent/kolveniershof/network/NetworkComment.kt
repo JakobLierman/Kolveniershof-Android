@@ -1,12 +1,9 @@
 package be.hogent.kolveniershof.network
 
-import android.os.Parcelable
-import be.hogent.kolveniershof.database.DatabaseComment
 import be.hogent.kolveniershof.domain.Comment
 import be.hogent.kolveniershof.domain.User
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
 
 /*@Parcelize
 data class Comment(
@@ -47,15 +44,6 @@ fun NetworkCommentContainer.asDomainModel(): List<Comment> {
     }
 }
 
-fun NetworkCommentContainer.asDatabaseModel(): Array<DatabaseComment> {
-    return comments.map {
-        DatabaseComment(
-            id = it.id,
-            comment = it.comment,
-            user = it.user
-        )
-    }.toTypedArray()
-}
 
 
 

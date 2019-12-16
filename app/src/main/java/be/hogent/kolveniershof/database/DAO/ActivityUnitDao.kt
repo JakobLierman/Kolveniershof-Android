@@ -1,10 +1,11 @@
-package be.hogent.kolveniershof.database
+package be.hogent.kolveniershof.database.DAO
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnit
 
 @Dao
 interface ActivityUnitDao {

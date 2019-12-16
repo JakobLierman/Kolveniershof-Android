@@ -1,10 +1,11 @@
-package be.hogent.kolveniershof.database
+package be.hogent.kolveniershof.database.DAO
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import be.hogent.kolveniershof.database.databaseModels.DatabaseWorkday
 import java.util.*
 
 @Dao
@@ -19,7 +20,7 @@ interface WorkdayDao {
     fun getWorkdayById(id: String): LiveData<DatabaseWorkday>
 
     @Query("SELECT * FROM workday_table WHERE workday_date =:date")
-    fun getByWorkdateByDate(date: Date): LiveData<DatabaseWorkday>
+    fun getByWorkdateByDate(date: String): LiveData<DatabaseWorkday>
 
 
 }

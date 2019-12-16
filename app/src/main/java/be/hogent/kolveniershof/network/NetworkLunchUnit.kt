@@ -1,13 +1,10 @@
 package be.hogent.kolveniershof.network
 
-import android.os.Parcelable
-import be.hogent.kolveniershof.database.DatabaseLunchUnit
+import be.hogent.kolveniershof.database.databaseModels.DatabaseLunchUnit
 import be.hogent.kolveniershof.domain.LunchUnit
 import be.hogent.kolveniershof.domain.User
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.squareup.moshi.JsonQualifier
-import kotlinx.android.parcel.Parcelize
 
 /**
  * LunchUnit entity
@@ -64,13 +61,3 @@ fun NetworkLunchUnitContainer.asDomainModel(): List<LunchUnit> {
     }
 }
 
-fun NetworkLunchUnitContainer.asDatabaseModel(): Array<DatabaseLunchUnit> {
-    return lunchUnits.map {
-        DatabaseLunchUnit(
-            id = it.id,
-            lunch = it.lunch,
-            mentors = it.mentors,
-            clients = it.clients
-        )
-    }.toTypedArray()
-}

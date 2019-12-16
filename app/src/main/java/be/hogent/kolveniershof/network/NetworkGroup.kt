@@ -1,12 +1,9 @@
 package be.hogent.kolveniershof.network
 
-import android.os.Parcelable
-import be.hogent.kolveniershof.database.DatabaseGroup
 import be.hogent.kolveniershof.domain.Group
 import be.hogent.kolveniershof.domain.User
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
 
 /**
  * Group entity
@@ -54,12 +51,3 @@ fun NetworkGroupContainer.asDomainModel(): List<Group> {
     }
 }
 
-fun NetworkGroupContainer.asDatabaseModel(): Array<DatabaseGroup> {
-    return groups.map {
-        DatabaseGroup(
-            id = it.id,
-            name = it.name,
-            members = it.members
-        )
-    }.toTypedArray()
-}

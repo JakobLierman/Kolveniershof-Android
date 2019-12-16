@@ -1,14 +1,15 @@
-package be.hogent.kolveniershof.database
+package be.hogent.kolveniershof.database.databaseModels
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import be.hogent.kolveniershof.domain.User
 import java.util.*
 
 @Entity(tableName = "user_table")
 data class DatabaseUser constructor(
     @ColumnInfo(name = "user_id")
+    @PrimaryKey(autoGenerate = false)
     var userId: String = "",
     @ColumnInfo(name = "user_firstName")
     var firstName: String = "",
@@ -19,27 +20,14 @@ data class DatabaseUser constructor(
     @ColumnInfo(name = "user_isAdmin")
     var isAdmin: Boolean = false,
     @ColumnInfo(name = "user_birthday")
-    var birthday: Date,
-    @ColumnInfo(name = "user_absentdates")
-    var absentDates: MutableList<Date> = mutableListOf(),
+    var birthday: String,
+
+    //TODO: absent Dates
+    /*@ColumnInfo(name = "user_absentdates")
+    var absentDates: MutableList<String> = mutableListOf(),*/
+
     @ColumnInfo(name = "user_imageUrl")
     var imgUrl: String? = null,
     @ColumnInfo(name = "user_token")
     var token: String? = null
 )
-
-fun List<DatabaseUser>.asDomainModel(): List<User> {
-    return map {
-        User(
-            id = it.userId,
-            firstName = it.firstName,
-            lastName = it.lastName,
-            email = it.email,
-            isAdmin = it.isAdmin,
-            birthday = it.birthday,
-            absentDates = it.absentDates,
-            imgUrl = it.imgUrl,
-            token = it.token
-        )
-    }
-}

@@ -1,13 +1,14 @@
-package be.hogent.kolveniershof.database
+package be.hogent.kolveniershof.database.databaseModels
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import be.hogent.kolveniershof.domain.Bus
 
 @Entity(tableName = "bus_table")
 data class DatabaseBus constructor(
     @ColumnInfo(name = "bus_id")
+    @PrimaryKey(autoGenerate = false)
     var id: String = "",
     @ColumnInfo(name = "bus_name")
     var name: String = "",

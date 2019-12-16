@@ -1,11 +1,9 @@
 package be.hogent.kolveniershof.network
 
-import android.os.Parcelable
-import be.hogent.kolveniershof.database.DatabaseUser
+import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 import be.hogent.kolveniershof.domain.User
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 /**
@@ -91,18 +89,3 @@ fun NetworkUserContainer.asDomainModel(): List<User> {
 }
 
 
-fun NetworkUserContainer.asDatabseModel(): Array<DatabaseUser> {
-    return users.map {
-        DatabaseUser(
-            userId = it.id,
-            firstName = it.firstName,
-            lastName = it.lastName,
-            email = it.email,
-            isAdmin = it.isAdmin,
-            birthday = it.birthday,
-            absentDates = it.absentDates,
-            imgUrl = it.imgUrl,
-            token = it.token
-        )
-    }.toTypedArray()
-}
