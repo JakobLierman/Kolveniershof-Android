@@ -71,24 +71,26 @@ data class NetworkWorkday(
     val isHoliday: Boolean? = false,
     @field:Json(name = "comments")
     val comments: MutableList<Comment>
-)
+) {
 
-fun NetworkWorkdayContainer.asDomainModel(): List<Workday> {
-    return workdays.map {
-        Workday(
-            id = it.id,
-            date = it.date,
-            daycareMentors = it.daycareMentors,
-            morningBusses = it.morningBusses,
-            amActivities = it.amActivities,
-            lunch = it.lunch,
-            pmActivities = it.pmActivities,
-            eveningBusses = it.eveningBusses,
-            isHoliday = it.isHoliday,
-            comments = it.comments
-        )
+    companion object {
+
+        fun asDomainModel(workday : NetworkWorkday): Workday {
+            return Workday(
+                    id = workday.id,
+                    date = workday.date,
+                    daycareMentors = workday.daycareMentors,
+                    morningBusses = workday.morningBusses,
+                    amActivities = workday.amActivities,
+                    lunch = workday.lunch,
+                    pmActivities = workday.pmActivities,
+                    eveningBusses = workday.eveningBusses,
+                    isHoliday = workday.isHoliday,
+                    comments = workday.comments
+                )
+            }
+        }
     }
-}
 
 
 

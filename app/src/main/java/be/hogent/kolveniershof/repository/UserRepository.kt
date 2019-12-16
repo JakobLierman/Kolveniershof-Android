@@ -15,16 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import javax.security.auth.login.LoginException
 
-class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) {
-
-    lateinit var context: Context
-
-    private fun isConnected(): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-
-        return networkInfo != null && networkInfo.isConnected
-    }
+class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) : BaseRepo() {
 
     fun getUser(email : String): User {
 

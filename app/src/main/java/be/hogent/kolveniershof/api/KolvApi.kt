@@ -3,6 +3,7 @@ package be.hogent.kolveniershof.api
 import be.hogent.kolveniershof.model.User
 import be.hogent.kolveniershof.model.Workday
 import be.hogent.kolveniershof.network.NetworkUser
+import be.hogent.kolveniershof.network.NetworkWorkday
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.*
@@ -58,7 +59,7 @@ interface KolvApi {
      * @return workdays
      */
     @GET("workdays")
-    fun getWorkdays(@Header("Authorization") authToken: String) : Observable<List<Workday>>
+    fun getWorkdays(@Header("Authorization") authToken: String) : Observable<List<NetworkWorkday>>
 
     /**
      * Gets workday by id
@@ -68,7 +69,7 @@ interface KolvApi {
      * @return workday
      */
     @GET("workdays/id/{id}")
-    fun getWorkdayById(@Header("Authorization") authToken: String, @Path("id") id: String) : Observable<Workday>
+    fun getWorkdayById(@Header("Authorization") authToken: String, @Path("id") id: String) : Observable<NetworkWorkday>
 
     /**
      * Gets workday by date by user
@@ -79,6 +80,6 @@ interface KolvApi {
      * @return
      */
     @GET("workdays/date/{date}/{user}")
-    fun getWorkdayByDateByUser(@Header("Authorization") authToken: String, @Path("date") dateString: String, @Path("user") userId: String) : Observable<Workday>
+    fun getWorkdayByDateByUser(@Header("Authorization") authToken: String, @Path("date") dateString: String, @Path("user") userId: String) : Observable<NetworkWorkday>
 
 }
