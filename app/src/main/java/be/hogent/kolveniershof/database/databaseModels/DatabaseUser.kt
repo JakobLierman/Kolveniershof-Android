@@ -20,7 +20,7 @@ data class DatabaseUser constructor(
     @ColumnInfo(name = "user_isAdmin")
     var isAdmin: Boolean = false,
     @ColumnInfo(name = "user_birthday")
-    var birthday: String,
+    var birthday: String = "",
 
     //TODO: absent Dates
     /*@ColumnInfo(name = "user_absentdates")
