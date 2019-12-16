@@ -16,7 +16,7 @@ interface ActivityUnitUserJOINDao : BaseDAO<DatabaseActivityUnitUserJOIN>{
         ON user_table.user_id = activityUnitUserJoin.userIdJOIN 
         WHERE activityUnitUserJoin.activityUnitIdJOIN =:activityUnit_Id
         """)
-    fun getUserFromActivities(activityUnit_Id: String): LiveData<MutableList<DatabaseUser>>
+    fun getUsersFromActivity(activityUnit_Id: String): LiveData<MutableList<DatabaseUser>>
 
     @Query("""
         SELECT * FROM activityUnit_table 
@@ -24,5 +24,5 @@ interface ActivityUnitUserJOINDao : BaseDAO<DatabaseActivityUnitUserJOIN>{
         ON activityUnit_table.activityUnit_id = activityUnitUserJoin.activityUnitIdJOIN 
         WHERE activityUnitUserJoin.userIdJOIN =:user_id
         """)
-    fun getActivitiesFromUsers(user_id: String): LiveData<MutableList<DatabaseActivityUnit>>
+    fun getActivitiesFromUser(user_id: String): LiveData<MutableList<DatabaseActivityUnit>>
 }
