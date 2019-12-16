@@ -9,7 +9,7 @@ import be.hogent.kolveniershof.database.databaseModels.DatabaseWorkday
 import java.util.*
 
 @Dao
-interface WorkdayDao {
+interface WorkdayDao : BaseDAO<DatabaseWorkday>{
     @Query("SELECT * FROM workday_table ORDER BY workday_date DESC")
     fun getAllWorkdays(): LiveData<List<DatabaseWorkday>>
 

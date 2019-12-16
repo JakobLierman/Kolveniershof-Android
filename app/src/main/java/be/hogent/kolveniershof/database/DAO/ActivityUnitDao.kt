@@ -8,7 +8,7 @@ import androidx.room.Query
 import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnit
 
 @Dao
-interface ActivityUnitDao {
+interface ActivityUnitDao : BaseDAO<DatabaseActivityUnit>{
     @Query("SELECT * FROM activityUnit_table")
     fun getAllActivityUnits(): LiveData<List<DatabaseActivityUnit>>
 

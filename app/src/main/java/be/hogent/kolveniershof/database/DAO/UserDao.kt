@@ -1,14 +1,11 @@
 package be.hogent.kolveniershof.database.DAO
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 
 @Dao
-interface UserDao {
+interface UserDao : BaseDAO<DatabaseUser>{
     @Query("SELECT * FROM user_table")
     fun getAllUsers(): LiveData<List<DatabaseUser>>
 
@@ -17,4 +14,7 @@ interface UserDao {
 
     @Query("SELECT * FROM user_table WHERE user_id =:id")
     fun getUSerById(id: String): LiveData<DatabaseUser>
+
+    @Delete
+    fun delete(user : DatabaseUser)
 }

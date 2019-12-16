@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnit
+import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnitUserJOIN
 import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 
 @Dao
-interface ActivityUnitUserJOINDao {
+interface ActivityUnitUserJOINDao : BaseDAO<DatabaseActivityUnitUserJOIN>{
 
     @Query("""
         SELECT * FROM user_table 
