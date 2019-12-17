@@ -17,4 +17,10 @@ interface ActivityUnitDao : BaseDAO<DatabaseActivityUnit>{
 
     @Query("SELECT * FROM activityUnit_table WHERE activityUnit_id =:id")
     fun getActivityById(id: String): LiveData<DatabaseActivityUnit>
+
+    @Query("SELECT * FROM activityUnit_table WHERE workday_id =:workdayId AND isAm == 1")
+    fun getAmActivitiesFromWorkday(workdayId: String) : LiveData<MutableList<DatabaseActivityUnit>>
+
+    @Query("SELECT * FROM activityUnit_table WHERE workday_id =:workdayId AND isAm == 0")
+    fun getPmActivitiesFromWorkday(workdayId: String) : LiveData<MutableList<DatabaseActivityUnit>>
 }

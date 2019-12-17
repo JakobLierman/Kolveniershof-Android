@@ -14,14 +14,15 @@ data class DatabaseActivity constructor(
     var name: String = "",
     @ColumnInfo(name = "activity_icon")
     var icon: String = ""
-)
-
-fun List<DatabaseActivity>.asDomainModel(): List<Activity> {
-    return map {
-        Activity(
-            id = it.activityId,
-            name = it.name,
-            icon = it.icon
-        )
+){
+    companion object {
+        fun toActivity(dbActivity: DatabaseActivity): Activity {
+            return Activity(
+                    id = dbActivity.activityId,
+                    name = dbActivity.name,
+                    icon = dbActivity.icon
+                )
+        }
     }
 }
+
