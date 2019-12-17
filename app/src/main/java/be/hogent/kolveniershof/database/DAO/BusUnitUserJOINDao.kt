@@ -15,9 +15,17 @@ interface BusUnitUserJOINDao : BaseDAO<DatabaseBusUnitUserJOIN>{
         SELECT * FROM user_table 
         INNER JOIN busUnitUserJoin 
         ON user_table.user_id = busUnitUserJoin.userIdJOIN 
-        WHERE busUnitUserJoin.busUnitIdJOIN =:busUnit_Id
+        WHERE busUnitUserJoin.busUnitIdJOIN =:busUnit_Id AND user_isAdmin = 1
         """)
-    fun getUsersFromBus(busUnit_Id: String): LiveData<MutableList<DatabaseUser>>
+    fun getMentorsFromBus(busUnit_Id: String): LiveData<MutableList<DatabaseUser>>
+
+    @Query("""
+        SELECT * FROM user_table 
+        INNER JOIN busUnitUserJoin 
+        ON user_table.user_id = busUnitUserJoin.userIdJOIN 
+        WHERE busUnitUserJoin.busUnitIdJOIN =:busUnit_Id AND user_isAdmin = 0
+        """)
+    fun getClientsFromBus(busUnit_Id: String): LiveData<MutableList<DatabaseUser>>
 
     @Query("""
         SELECT * FROM busUnit_table 

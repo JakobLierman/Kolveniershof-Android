@@ -17,7 +17,7 @@ import retrofit2.HttpException
 import java.util.*
 import javax.security.auth.login.LoginException
 
-class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val workdayDao: WorkdayDao, val workdayUserJOINDao: WorkdayUserJOINDao, val busUnitDao : BusUnitDao) : BaseRepo() {
+class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val workdayDao: WorkdayDao, val workdayUserJOINDao: WorkdayUserJOINDao, val busUnitDao : BusUnitDao, val busRepository: BusRepository) : BaseRepo() {
 
     fun getUser(email: String): User {
 
@@ -53,14 +53,17 @@ class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val 
 
     private fun databaseWorkdayToWrokday(dbWorkday : DatabaseWorkday) : Workday {
         val daycareMentors =  workdayUserJOINDao.getUsersFromWorkday(dbWorkday.id).value!!.map { user -> DatabaseUser.toUser(user) }.toMutableList()
-        val workdayBusses = busUnitDao.getBusUnitsFromWorkday(dbWorkday.id).value!!.map { bus -> DatabaseBus}
+        val morningBusses = busUnitDao.getBusUnitsFromWorkday(dbWorkday.id).value!!.filter { bus -> bus.isAfternoon == false } .map { bus -> busRepository.databaseBusUnitToBusUnit(bus)}.toMutableList()
+        val eveningBusses = busUnitDao.getBusUnitsFromWorkday(dbWorkday.id).value!!.filter { bus -> bus.isAfternoon == true } .map { bus -> busRepository.databaseBusUnitToBusUnit(bus)}.toMutableList()
 
 
         return Workday(
             id = dbWorkday.id,
             date = Date(dbWorkday.date),
             daycareMentors = daycareMentors,
-            morningBusses = busUnitDao.
+            morningBusses = morningBusses,
+            eveningBusses = eveningBusses,
+
             )
 
 

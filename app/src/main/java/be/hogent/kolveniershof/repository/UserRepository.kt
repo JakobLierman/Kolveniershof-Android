@@ -33,6 +33,22 @@ class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) : BaseR
         }
     }
 
+    fun getUserById(id : String): User {
+
+        // check if database is empty
+        if (userDao.getRowCount() <= 0) {
+            if(isConnected()){
+                var tempUser : User? = null
+                kolvApi.getUserById(id).subscribe { user -> tempUser = NetworkUser.asDomainModel(user)}
+                return tempUser!!
+            }else {
+                return DatabaseUser.toUser(userDao.getUSerById(id).value!!)
+            }
+        } else {
+            return DatabaseUser.toUser(userDao.getUSerById(id).value!!)
+        }
+    }
+
     fun login(email: String, password: String): User {
         try {
             return NetworkUser.asDomainModel(kolvApi.login(email, password)
