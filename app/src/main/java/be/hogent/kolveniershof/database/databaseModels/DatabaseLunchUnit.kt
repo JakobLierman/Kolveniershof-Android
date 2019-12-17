@@ -23,4 +23,13 @@ data class DatabaseLunchUnit constructor(
     var workdayId: String = "",
     @ColumnInfo(name = "lunch")
     var luch: String
-)
+) {
+    companion object {
+        fun databaseLunchUnitToLunchUnit(dbLunch: DatabaseLunchUnit) : LunchUnit {
+            return LunchUnit(
+                id = dbLunch.id,
+                lunch = dbLunch.luch
+            )
+        }
+    }
+}

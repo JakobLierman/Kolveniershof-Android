@@ -2,13 +2,13 @@ package be.hogent.kolveniershof.repository
 
 import androidx.lifecycle.LiveData
 import be.hogent.kolveniershof.api.KolvApi
-import be.hogent.kolveniershof.database.DAO.BusUnitDao
-import be.hogent.kolveniershof.database.DAO.UserDao
-import be.hogent.kolveniershof.database.DAO.WorkdayDao
-import be.hogent.kolveniershof.database.DAO.WorkdayUserJOINDao
+import be.hogent.kolveniershof.database.DAO.*
 import be.hogent.kolveniershof.database.databaseModels.DatabaseBus
+import be.hogent.kolveniershof.database.databaseModels.DatabaseLunchUnit
 import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 import be.hogent.kolveniershof.database.databaseModels.DatabaseWorkday
+import be.hogent.kolveniershof.domain.Comment
+import be.hogent.kolveniershof.domain.LunchUnit
 import be.hogent.kolveniershof.domain.User
 import be.hogent.kolveniershof.domain.Workday
 import be.hogent.kolveniershof.network.NetworkUser
@@ -17,38 +17,10 @@ import retrofit2.HttpException
 import java.util.*
 import javax.security.auth.login.LoginException
 
-class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val workdayDao: WorkdayDao, val workdayUserJOINDao: WorkdayUserJOINDao, val busUnitDao : BusUnitDao, val busRepository: BusRepository, val activityRepository: ActivityRepository) : BaseRepo() {
+class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val workdayDao: WorkdayDao, val workdayUserJOINDao: WorkdayUserJOINDao, val busUnitDao : BusUnitDao, val busRepository: BusRepository, val activityRepository: ActivityRepository, val lunchUnitDao: LunchUnitDao) : BaseRepo() {
 
-    fun getUser(email: String): User {
-
-        // check if database is empty
-        if (userDao.getRowCount() <= 0) {
-            if (isConnected()) {
-                var tempUser: User? = null
-                kolvApi.getUserByEmail(email)
-                    .subscribe { user -> tempUser = NetworkUser.asDomainModel(user) }
-                return tempUser!!
-            } else {
-                return DatabaseUser.toUser(userDao.getUSerByEmail(email).value!!)
-            }
-        } else {
-            return DatabaseUser.toUser(userDao.getUSerByEmail(email).value!!)
-        }
-    }
-
-    fun login(email: String, password: String): User {
-        try {
-            return NetworkUser.asDomainModel(kolvApi.login(email, password)
-                .doOnError { error -> onRetrieveError(error) }
-                .blockingGet())
-
-        } catch (e: Exception) {
-            throw LoginException((e as HttpException).response()!!.errorBody()!!.string())
-        }
-    }
-
-    private fun onRetrieveError(error: Throwable) {
-        Logger.e(error.message!!)
+    fun getWorkdays(): MutableList<Workday> {
+        return workdayDao.getAllWorkdays().value!!.map { wd -> databaseWorkdayToWrokday(wd) }.toMutableList()
     }
 
     private fun databaseWorkdayToWrokday(dbWorkday : DatabaseWorkday) : Workday {
@@ -64,7 +36,11 @@ class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val 
             daycareMentors = daycareMentors,
             morningBusses = morningBusses,
             eveningBusses = eveningBusses,
-            amActivities = amActivities
+            amActivities = amActivities,
+            lunch = DatabaseLunchUnit.databaseLunchUnitToLunchUnit(lunchUnitDao.getLunchFromWorkday(dbWorkday.id).value!!),
+            pmActivities = pmActivities,
+            isHoliday = dbWorkday.isHoliday,
+            comments = mutableListOf<Comment>()
 
             )
 
