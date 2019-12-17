@@ -26,5 +26,7 @@ data class DatabaseBusUnit constructor(
     @ColumnInfo(name = "bus_id", index = true)
     var busId: String,
     @ColumnInfo(name = "workday_id", index = true)
-    var workdayId: String
+    var workdayId: String,
+    @ColumnInfo(name = "isAfternoon")
+    var isAfternoon: Boolean
 )
