@@ -47,33 +47,31 @@ class KolveniershofDatabaseTest {
     @Test
     @Throws(Exception::class)
     fun insertAndGetUser() {
-        val user = DatabaseUser()
+        val user = DatabaseUser(userId = "1")
         userDao.insertItem(user)
-        val dbuser = userDao.getAllUsers().value!!.last()
-        Assert.assertEquals(user.userId, dbuser.userId)
+        val dbuser = userDao.getAllUsers().value?.last()
+        Assert.assertEquals(user.userId, dbuser?.userId)
     }
 
     @Test
     @Throws(Exception::class)
     fun insertManyUsers() {
-        val user1 = DatabaseUser()
-        val user2 = DatabaseUser()
+        val user1 = DatabaseUser(userId = "1")
+        val user2 = DatabaseUser(userId = "2")
         userDao.insertItem(user1)
         userDao.insertItem(user2)
-        val dbusers = userDao.getAllUsers().value!!
-        Assert.assertEquals(dbusers.size, 2)
+        Assert.assertEquals(userDao.getRowCount(), 2)
     }
 
     @Test
     @Throws(Exception::class)
     fun deleteUser() {
-        val user1 = DatabaseUser()
-        val user2 = DatabaseUser()
+        val user1 = DatabaseUser(userId = "1")
+        val user2 = DatabaseUser(userId = "2")
         userDao.insertItem(user1)
         userDao.insertItem(user2)
         userDao.delete(user1)
-        val dbusers = userDao.getAllUsers().value!!
-        Assert.assertEquals(dbusers.size, 1)
+        Assert.assertEquals(userDao.getRowCount(), 1)
     }
 
 
