@@ -6,6 +6,7 @@ data class Workday(
     val id: String,
     val date: Date,
     val daycareMentors: MutableList<User>,
+    val dayActivities: MutableList<ActivityUnit>,
     val morningBusses: MutableList<BusUnit>,
     val amActivities: MutableList<ActivityUnit>,
     val lunch: LunchUnit,
