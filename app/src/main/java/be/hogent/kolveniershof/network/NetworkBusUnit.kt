@@ -54,8 +54,7 @@ fun NetworkBusUnitContainer.asDomainModel(): List<BusUnit> {
         BusUnit(
             id = it.id,
             bus = it.bus,
-            mentors = it.mentors,
-            clients = it.clients
+            mentors = it.mentors
         )
     }
 }

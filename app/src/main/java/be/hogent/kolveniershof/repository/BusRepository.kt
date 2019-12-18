@@ -23,8 +23,7 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
         return BusUnit(
             id = dbBusUnit.id,
             bus= getBusById(dbBusUnit.busId),
-            mentors=  mentors,
-            clients= clients
+            mentors=  mentors
         )
     }
 
@@ -36,8 +35,7 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
         return  Bus(
             id = dbBus.id,
             name= dbBus.name,
-            color = dbBus.color,
-            iconUrl = dbBus.iconUrl
+            color = dbBus.color
         )
     }
 

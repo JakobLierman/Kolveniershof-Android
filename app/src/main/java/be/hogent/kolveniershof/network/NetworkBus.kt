@@ -51,8 +51,7 @@ fun NetworkBusContainer.asDomainModel(): List<Bus> {
         Bus(
             id = it.id,
             name = it.name,
-            color = it.color,
-            iconUrl = it.iconUrl
+            color = it.color
         )
     }
 }

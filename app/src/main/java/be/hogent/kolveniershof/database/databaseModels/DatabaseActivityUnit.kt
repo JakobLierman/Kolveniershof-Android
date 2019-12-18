@@ -25,5 +25,7 @@ data class DatabaseActivityUnit constructor(
     val workdayId: String,
     @ColumnInfo(name = "workday_id", index = true)
     val activityId: String,
-    val isAm: Boolean
+    val isAm: Boolean,
+    val isPm: Boolean,
+    val isDay: Boolean
 )

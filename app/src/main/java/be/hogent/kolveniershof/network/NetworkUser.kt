@@ -80,8 +80,6 @@ data class NetworkUser(
                     lastName = user.lastName,
                     email = user.email,
                     isAdmin = user.isAdmin,
-                    birthday = user.birthday,
-                    absentDates = user.absentDates,
                     imgUrl = user.imgUrl,
                     token = user.token
                 )

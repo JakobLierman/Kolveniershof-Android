@@ -1,19 +1,21 @@
 package be.hogent.kolveniershof.viewmodels
 
 import android.view.View
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import be.hogent.kolveniershof.model.Workday
+import be.hogent.kolveniershof.domain.Workday
 import be.hogent.kolveniershof.repository.KolvRepository
+import be.hogent.kolveniershof.repository.WorkdayRepository
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class DayViewModel(val repo: KolvRepository) : ViewModel() {
+class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
 
     val workdays = MutableLiveData<List<Workday>>()
-    val workday = MutableLiveData<Workday>()
+    var workday = LiveData<Workday>
     val loadingVisibility = MutableLiveData<Int>()
     val objectVisibility = MutableLiveData<Int>()
 
@@ -25,17 +27,7 @@ class DayViewModel(val repo: KolvRepository) : ViewModel() {
     }
 
     fun getWorkdayById(authToken: String, id: String) {
-        disposables.add(
-            kolvApi.getWorkdayById(authToken, id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveStart() }
-                .doOnTerminate { onRetrieveFinish() }
-                .subscribe(
-                    { result -> onRetrieveSingleSuccess(result) },
-                    { error -> onRetrieveError(error) }
-                )
-        )
+            workday = repo.getWorkdayById(id)
     }
 
     fun getWorkdayByDateByUser(authToken: String, date: String, userId: String) {

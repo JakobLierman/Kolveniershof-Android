@@ -1,7 +1,5 @@
 package be.hogent.kolveniershof.api
 
-import be.hogent.kolveniershof.model.User
-import be.hogent.kolveniershof.model.Workday
 import be.hogent.kolveniershof.network.NetworkUser
 import be.hogent.kolveniershof.network.NetworkWorkday
 import io.reactivex.Observable

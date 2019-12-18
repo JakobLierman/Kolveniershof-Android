@@ -56,8 +56,7 @@ fun NetworkActivityUnitContainer.asDomainModel(): List<ActivityUnit> {
         ActivityUnit(
             id = it.id,
             activity = it.activity,
-            mentors = it.mentors,
-            clients = it.clients
+            mentors = it.mentors
         )
     }
 }

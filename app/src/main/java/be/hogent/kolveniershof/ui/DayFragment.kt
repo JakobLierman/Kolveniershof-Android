@@ -21,7 +21,7 @@ import be.hogent.kolveniershof.R
 import be.hogent.kolveniershof.databinding.FragmentDayBinding
 import be.hogent.kolveniershof.databinding.FragmentEmptyHolidayBinding
 import be.hogent.kolveniershof.databinding.FragmentWeekendBinding
-import be.hogent.kolveniershof.model.*
+import be.hogent.kolveniershof.domain.*
 import be.hogent.kolveniershof.util.GlideApp
 import be.hogent.kolveniershof.viewmodels.DayViewModel
 import com.google.android.material.textfield.TextInputEditText

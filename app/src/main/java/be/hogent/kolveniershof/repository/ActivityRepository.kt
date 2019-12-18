@@ -19,8 +19,7 @@ class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUni
         return ActivityUnit(
             id = dbActivity.id,
             activity = getActivityById(dbActivity.activityId),
-            mentors = mentors,
-            clients = clients
+            mentors = mentors
         )
     }
 
@@ -33,7 +32,11 @@ class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUni
     }
 
     fun getPmActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
-        return activityUnitDao.getAmActivitiesFromWorkday(workdayId).value!!.map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
+        return activityUnitDao.getPmActivitiesFromWorkday(workdayId).value!!.map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
+    }
+
+    fun getDayActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
+        return activityUnitDao.getDayActivitiesFromWorkday(workdayId).value!!.map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
 
 }

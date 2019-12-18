@@ -65,6 +65,8 @@ data class NetworkWorkday(
     val lunch: LunchUnit,
     @field:Json(name = "pmActivities")
     val pmActivities: MutableList<ActivityUnit>,
+    @field:Json(name = "dayActivities")
+    val dayActivities: MutableList<ActivityUnit>,
     @field:Json(name = "eveningBusses")
     val eveningBusses: MutableList<BusUnit>,
     @field:Json(name = "holiday")
@@ -86,7 +88,8 @@ data class NetworkWorkday(
                     pmActivities = workday.pmActivities,
                     eveningBusses = workday.eveningBusses,
                     isHoliday = workday.isHoliday,
-                    comments = workday.comments
+                    comments = workday.comments,
+                    dayActivities = workday.dayActivities
                 )
             }
         }

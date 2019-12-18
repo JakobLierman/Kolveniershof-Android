@@ -54,9 +54,7 @@ fun NetworkLunchUnitContainer.asDomainModel(): List<LunchUnit> {
     return lunchUnits.map {
         LunchUnit(
             id = it.id,
-            lunch = it.lunch,
-            mentors = it.mentors,
-            clients = it.clients
+            lunch = it.lunch
         )
     }
 }

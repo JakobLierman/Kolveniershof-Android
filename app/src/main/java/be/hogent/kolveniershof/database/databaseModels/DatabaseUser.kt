@@ -35,7 +35,7 @@ data class DatabaseUser constructor(
     companion object {
 
         fun toUser(dbuser: DatabaseUser): User {
-            val user = User(dbuser.userId, dbuser.firstName, dbuser.lastName, dbuser.email, dbuser.isAdmin, Date(dbuser.birthday), mutableListOf(), dbuser.imgUrl, dbuser.token)
+            val user = User(dbuser.userId, dbuser.firstName, dbuser.lastName, dbuser.email, dbuser.isAdmin, dbuser.imgUrl, dbuser.token)
             return user
         }
     }
