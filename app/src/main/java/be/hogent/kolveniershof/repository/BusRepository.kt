@@ -72,5 +72,7 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
             color = dbBus.color
         )
     }
-
+    fun getBusUnitFromWorkday(dbWorkdayId:String, isAfternoon:Boolean): MutableList<BusUnit>{
+       return busUnitDao.getBusUnitsFromWorkday(dbWorkdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().filter { bus -> bus.isAfternoon == isAfternoon } .map { bus -> databaseBusUnitToBusUnit(bus)}.toMutableList()
+    }
 }
