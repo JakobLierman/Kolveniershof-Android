@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
 
     val workdays = MutableLiveData<List<Workday>>()
-   // var workday = LiveData<Workday>
+    lateinit var workday : LiveData<Workday>
     val loadingVisibility = MutableLiveData<Int>()
     val objectVisibility = MutableLiveData<Int>()
 

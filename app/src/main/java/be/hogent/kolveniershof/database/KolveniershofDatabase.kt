@@ -4,10 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import be.hogent.kolveniershof.database.DAO.ActivityUnitDao
-import be.hogent.kolveniershof.database.DAO.ActivityUnitUserJOINDao
-import be.hogent.kolveniershof.database.DAO.UserDao
-import be.hogent.kolveniershof.database.DAO.WorkdayDao
+import be.hogent.kolveniershof.database.DAO.*
 import be.hogent.kolveniershof.database.databaseModels.*
 
 //import javax.inject.Inject
@@ -18,8 +15,13 @@ import be.hogent.kolveniershof.database.databaseModels.*
     DatabaseWorkday::class, DatabaseActivityUnitUserJOIN::class, DatabaseBusUnitUserJOIN::class, DatabaseWorkdayUserJOIN::class],
     version = 1, exportSchema = true)
 abstract class KolveniershofDatabase  : RoomDatabase() {
+    abstract fun ActivityDao() : ActivityDao
     abstract fun ActivityUnitDao() : ActivityUnitDao
     abstract fun ActivityUnitUserJOINDao() : ActivityUnitUserJOINDao
+    abstract fun BusDao() : BusDao
+    abstract fun BusUnitDao() : BusUnitDao
+    abstract fun BusUnitUserJOINDao() : BusUnitUserJOINDao
+    abstract fun LunchUnitDao() : LunchUnitDao
     abstract fun UserDao() : UserDao
     abstract fun WorkdayDao() : WorkdayDao
 

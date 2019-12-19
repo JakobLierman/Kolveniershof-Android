@@ -28,11 +28,4 @@ interface BusUnitUserJOINDao : BaseDAO<DatabaseBusUnitUserJOIN>{
         """)
     fun getClientsFromBus(busUnit_Id: String): Single<List<DatabaseUser>>
 
-    @Query("""
-        SELECT * FROM busUnit_table 
-        INNER JOIN busUnitUserJoin 
-        ON busUnit_table.busUnit_id = busUnitUserJoin.busUnitIdJOIN 
-        WHERE busUnitUserJoin.userIdJOIN =:user_id
-        """)
-    fun getBussesFromUser(user_id: String): Single<List<DatabaseActivityUnit>>
 }
