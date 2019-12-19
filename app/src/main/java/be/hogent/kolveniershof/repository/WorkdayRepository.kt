@@ -1,6 +1,7 @@
 package be.hogent.kolveniershof.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import be.hogent.kolveniershof.api.KolvApi
 import be.hogent.kolveniershof.database.DAO.*
@@ -16,17 +17,35 @@ import java.util.*
 
 class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val workdayDao: WorkdayDao, val workdayUserJOINDao: WorkdayUserJOINDao, val busUnitDao : BusUnitDao, val busRepository: BusRepository, val activityRepository: ActivityRepository, val lunchUnitDao: LunchUnitDao) : BaseRepo() {
 
-    fun getWorkdays(): LiveData<MutableList<Workday>> {
+    fun getWorkdays(authToken:String): LiveData<MutableList<Workday>> {
 
-        val wds = workdayDao.getAllWorkdays()
+
+        val workdays = workdayDao.getAllWorkdays()
+        //Check if empty, if true --> check if connected and get directly from API
+        if(workdays.value == null && isConnected()){
+            val workdaysList = ArrayList<Workday>()
+             kolvApi.getWorkdays(authToken).subscribe{
+                it.forEach {
+                   workdaysList.add(networkWorkdayToWorkday(it))
+                }
+            }
+            val liveDataWorkdays = MutableLiveData<MutableList<Workday>>()
+            liveDataWorkdays.value = workdaysList
+        }
         return Transformations.map(
-            wds,
+            workdays,
             {list -> list.map { l -> databaseWorkdayToWorkday(l) }.toMutableList()}
         )
     }
 
-    fun getWorkdayById(id: String): LiveData<Workday> {
+    fun getWorkdayById(authToken: String,id: String): LiveData<Workday> {
         val wd = workdayDao.getWorkdayById(id)
+        if(wd.value == null && isConnected()){
+            val netWorkday =  kolvApi.getWorkdayById(authToken,id).blockingFirst()
+            val liveDataWorkday = MutableLiveData<Workday>()
+            liveDataWorkday.value = networkWorkdayToWorkday(netWorkday)
+            return liveDataWorkday
+        }
         return Transformations.map(wd, {dbWorkday -> databaseWorkdayToWorkday(dbWorkday)})
     }
 
