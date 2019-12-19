@@ -112,7 +112,7 @@ class DayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var root: View?
-        val workday: Workday? = viewModel.getWorkdayByDateByUserSync(sharedPrefs.getString("TOKEN", "")!!, arguments?.getString("workdayDate")!!, sharedPrefs.getString("ID", "")!!)
+        val workday: Workday? = viewModel.workday.value//viewModel.getWorkdayByDateByUserSync(sharedPrefs.getString("TOKEN", "")!!, arguments?.getString("workdayDate")!!, sharedPrefs.getString("ID", "")!!)
         when {
                 workday == null -> {
                     isEmpty = true

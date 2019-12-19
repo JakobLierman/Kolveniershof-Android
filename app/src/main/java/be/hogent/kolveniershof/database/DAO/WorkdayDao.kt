@@ -26,5 +26,7 @@ interface WorkdayDao : BaseDAO<DatabaseWorkday>{
     @Query("select count(*) from workday_table")
     fun getRowCount(): Int
 
+    @Query("SELECT * FROM workday_table JOIN WorkdayUserJoin ON workday_id JOIN user_table ON user_id WHERE workday_date =:date AND user_id =:userId")
+    fun getWorkdayByDateByUser(date: String, userId: String):LiveData<DatabaseWorkday>
 
 }

@@ -18,16 +18,7 @@ import java.util.*
 class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val workdayDao: WorkdayDao, val workdayUserJOINDao: WorkdayUserJOINDao, val busUnitDao : BusUnitDao, val busRepository: BusRepository, val activityRepository: ActivityRepository, val lunchUnitDao: LunchUnitDao) : BaseRepo() {
 
     fun getWorkdays(authToken:String): LiveData<MutableList<Workday>> {
-        //Check if empty, if true --> check if connected and get directly from API
-        if( workdayDao.getRowCount() <= 0 && isConnected()){
-            val workdaysList = ArrayList<Workday>()
-             kolvApi.getWorkdays(authToken).subscribe{
-                it.forEach {
-                   workdaysList.add(networkWorkdayToWorkday(it))
-                }
-            }
-            workdayDao.insertItems(workdaysList.map { wd ->  workdayToDatabaseWorkday(wd)})
-        }
+        checkDatabaseWorkdays(authToken)
         return Transformations.map(
             workdayDao.getAllWorkdays(),
             {list -> list.map { l -> databaseWorkdayToWorkday(l) }.toMutableList()}
@@ -35,14 +26,24 @@ class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val 
     }
 
     fun getWorkdayById(authToken: String,id: String): LiveData<Workday> {
-        val wd = workdayDao.getWorkdayById(id)
-        if(wd.value == null && isConnected()){
-            val netWorkday =  kolvApi.getWorkdayById(authToken,id).blockingFirst()
-            val liveDataWorkday = MutableLiveData<Workday>()
-            liveDataWorkday.value = networkWorkdayToWorkday(netWorkday)
-            return liveDataWorkday
+        checkDatabaseWorkdays(authToken)
+        return Transformations.map(workdayDao.getWorkdayById(id), {dbWorkday -> databaseWorkdayToWorkday(dbWorkday)})
+    }
+    fun getWorkdayByDateByUser(authToken: String, date: String, userId: String):LiveData<Workday>{
+        checkDatabaseWorkdays(authToken)
+        return Transformations.map(workdayDao.getWorkdayByDateByUser(date,userId), {dbWorkday -> databaseWorkdayToWorkday(dbWorkday)})
+    }
+    private fun checkDatabaseWorkdays(authToken: String){
+        //Check if empty, if true --> check if connected and get directly from API
+        if( workdayDao.getRowCount() <= 0 && isConnected()){
+            val workdaysList = ArrayList<Workday>()
+            kolvApi.getWorkdays(authToken).subscribe{
+                it.forEach {
+                    workdaysList.add(networkWorkdayToWorkday(it))
+                }
+            }
+            workdayDao.insertItems(workdaysList.map { wd ->  workdayToDatabaseWorkday(wd)})
         }
-        return Transformations.map(wd, {dbWorkday -> databaseWorkdayToWorkday(dbWorkday)})
     }
 
     private fun databaseWorkdayToWorkday(dbWorkday : DatabaseWorkday) : Workday {
@@ -77,8 +78,10 @@ class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val 
             isHoliday = workday.isHoliday
         )
 
-        activityRepository.addAmActivities(workday.amActivities, workday.id)
-        
+        activityRepository.addActivities(workday.amActivities, workday.id)
+        activityRepository.addActivities(workday.pmActivities,workday.id)
+        busRepository.addBusses(workday.morningBusses,workday.id)
+        busRepository.addBusses(workday.eveningBusses,workday.id)
 
 
 

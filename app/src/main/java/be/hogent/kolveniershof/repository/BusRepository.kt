@@ -41,7 +41,30 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
         } else
         return databaseBusToBus(busDao.getBusById(id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
     }
+    fun addBusses(busses: MutableList<BusUnit>, workdayId:String){
+        val dbBusses = busses.map { bus -> busUnitToDatabaseUnit(bus,workdayId) }
+    }
+    private fun busUnitToDatabaseUnit(unit : BusUnit,workdayId : String): DatabaseBusUnit{
+        val dbBusUnit = DatabaseBusUnit(
+            id = unit.id,
+            busId = unit.bus.id,
+            workdayId = workdayId,
+            isAfternoon = true
+        )
+        addBus(unit.bus)
+        return dbBusUnit
+    }
+    private fun addBus(bus:Bus){
+        busDao.insertItem(busToDatabaseBus(bus))
+    }
 
+    private fun busToDatabaseBus(bus: Bus): DatabaseBus{
+        return DatabaseBus(
+            id = bus.id,
+            name = bus.name,
+            color = bus.color
+        )
+    }
     fun databaseBusToBus(dbBus : DatabaseBus) : Bus {
         return  Bus(
             id = dbBus.id,

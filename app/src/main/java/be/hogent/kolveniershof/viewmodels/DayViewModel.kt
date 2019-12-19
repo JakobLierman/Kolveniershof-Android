@@ -31,6 +31,7 @@ class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
     }
 
     fun getWorkdayByDateByUser(authToken: String, date: String, userId: String) {
+        workday= repo.getWorkdayByDateByUser(authToken, date, userId)
         /*disposables.add(
             kolvApi.getWorkdayByDateByUser(authToken, date, userId)
                 .subscribeOn(Schedulers.io())
