@@ -45,4 +45,36 @@ class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUni
         return activityUnitDao.getDayActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
 
+    fun addAmActivities(activities : MutableList<ActivityUnit>, wdId: String) {
+        val dbActivities = activities.map { a ->  activityUnitToDatabaseActivityUnit(a, wdId) }
+        activityUnitDao.insertItems(dbActivities)
+    }
+
+    fun activityUnitToDatabaseActivityUnit (unit : ActivityUnit, wdId: String) : DatabaseActivityUnit {
+
+        val dbActivityUnit = DatabaseActivityUnit(
+            id = unit.id,
+            workdayId = wdId,
+            activityId = unit.activity.id,
+            isAm = true,
+            isPm = false,
+            isDay = false
+        )
+        addActivity(unit.activity)
+
+        return dbActivityUnit
+    }
+
+    fun addActivity(activity: Activity) {
+        activityDao.insertItem(activityToDatabaseActivity(activity))
+    }
+
+    fun activityToDatabaseActivity(activity: Activity) : DatabaseActivity {
+        return DatabaseActivity(
+            activityId = activity.id,
+            name = activity.name,
+            icon = activity.icon
+        )
+    }
+
 }
