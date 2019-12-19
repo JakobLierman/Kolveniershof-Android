@@ -7,15 +7,16 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnit
 import be.hogent.kolveniershof.database.databaseModels.DatabaseBusUnit
+import io.reactivex.Single
 
 @Dao
 interface BusUnitDao : BaseDAO<DatabaseBusUnit>{
     @Query("SELECT * FROM busUnit_table")
-    fun getAllBusUnits(): LiveData<List<DatabaseBusUnit>>
+    fun getAllBusUnits(): Single<List<DatabaseBusUnit>>
 
     @Query("SELECT * FROM busUnit_table WHERE busUnit_id =:id")
-    fun getBusUnitById(id: String): LiveData<DatabaseBusUnit>
+    fun getBusUnitById(id: String): Single<DatabaseBusUnit>
 
     @Query("SELECT * FROM busUnit_table Where workday_id =:id")
-    fun getBusUnitsFromWorkday(id: String) : LiveData<List<DatabaseBusUnit>>
+    fun getBusUnitsFromWorkday(id: String) : Single<List<DatabaseBusUnit>>
 }

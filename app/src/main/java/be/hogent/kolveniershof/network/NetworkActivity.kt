@@ -41,7 +41,7 @@ data class NetworkActivity( //NetworkActivity
     @field:Json(name = "icon")
     val icon: String
 )
-
+/*
 fun NetworkActivityContainer.asDomainModel(): List<Activity> {
     return activities.map {
         Activity(
@@ -49,6 +49,20 @@ fun NetworkActivityContainer.asDomainModel(): List<Activity> {
             name = it.name,
             icon = it.icon
         )
+    }
+}*/
+
+{
+
+    companion object {
+
+        fun asDomainModel(activity : NetworkActivity): Activity {
+            return Activity(
+                id = activity.id,
+                name = activity.name,
+                icon = activity.icon
+            )
+        }
     }
 }
 

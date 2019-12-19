@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import be.hogent.kolveniershof.database.databaseModels.*
+import io.reactivex.Single
 
 @Dao
 interface WorkdayUserJOINDao : BaseDAO<DatabaseWorkdayUserJOIN> {
@@ -16,7 +17,7 @@ interface WorkdayUserJOINDao : BaseDAO<DatabaseWorkdayUserJOIN> {
         WHERE workdayUserJoin.workdayIdJOIN =:workday_Id
         """
     )
-    fun getUsersFromWorkday(workday_Id: String): LiveData<MutableList<DatabaseUser>>
+    fun getUsersFromWorkday(workday_Id: String): Single<List<DatabaseUser>>
 
     @Query(
         """
@@ -26,5 +27,5 @@ interface WorkdayUserJOINDao : BaseDAO<DatabaseWorkdayUserJOIN> {
         WHERE workdayUserJoin.userIdJOIN =:user_id
         """
     )
-    fun getWorkdaysFromUser(user_id: String): LiveData<MutableList<DatabaseWorkday>>
+    fun getWorkdaysFromUser(user_id: String): Single<List<DatabaseWorkday>>
 }

@@ -6,6 +6,7 @@ import androidx.room.Query
 import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnit
 import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnitUserJOIN
 import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
+import io.reactivex.Single
 
 @Dao
 interface ActivityUnitUserJOINDao : BaseDAO<DatabaseActivityUnitUserJOIN>{
@@ -16,7 +17,7 @@ interface ActivityUnitUserJOINDao : BaseDAO<DatabaseActivityUnitUserJOIN>{
         ON user_table.user_id = activityUnitUserJoin.userIdJOIN 
         WHERE activityUnitUserJoin.activityUnitIdJOIN =:activityUnit_Id
         """)
-    fun getUsersFromActivity(activityUnit_Id: String): LiveData<MutableList<DatabaseUser>>
+    fun getUsersFromActivity(activityUnit_Id: String): Single<List<DatabaseUser>>
 
     @Query("""
         SELECT * FROM activityUnit_table 
@@ -24,5 +25,5 @@ interface ActivityUnitUserJOINDao : BaseDAO<DatabaseActivityUnitUserJOIN>{
         ON activityUnit_table.activityUnit_id = activityUnitUserJoin.activityUnitIdJOIN 
         WHERE activityUnitUserJoin.userIdJOIN =:user_id
         """)
-    fun getActivitiesFromUser(user_id: String): LiveData<MutableList<DatabaseActivityUnit>>
+    fun getActivitiesFromUser(user_id: String): Single<List<DatabaseActivityUnit>>
 }

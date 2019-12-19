@@ -51,7 +51,8 @@ data class NetworkActivityUnit( //NetworkActivityUnit
     val clients: MutableList<User>
 )
 
-fun NetworkActivityUnitContainer.asDomainModel(): List<ActivityUnit> {
+/*
+* fun NetworkActivityUnitContainer.asDomainModel(): List<ActivityUnit> {
     return activityUnits.map {
         ActivityUnit(
             id = it.id,
@@ -60,4 +61,8 @@ fun NetworkActivityUnitContainer.asDomainModel(): List<ActivityUnit> {
         )
     }
 }
+* */
+
+
+
 

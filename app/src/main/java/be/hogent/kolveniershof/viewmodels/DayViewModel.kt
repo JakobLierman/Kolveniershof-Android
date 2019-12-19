@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
 
     val workdays = MutableLiveData<List<Workday>>()
-    var workday = LiveData<Workday>
+   // var workday = LiveData<Workday>
     val loadingVisibility = MutableLiveData<Int>()
     val objectVisibility = MutableLiveData<Int>()
 
@@ -27,11 +27,11 @@ class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
     }
 
     fun getWorkdayById(authToken: String, id: String) {
-            workday = repo.getWorkdayById(id)
+         //   workday = repo.getWorkdayById(id)
     }
 
     fun getWorkdayByDateByUser(authToken: String, date: String, userId: String) {
-        disposables.add(
+        /*disposables.add(
             kolvApi.getWorkdayByDateByUser(authToken, date, userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -41,16 +41,17 @@ class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
                     { result -> onRetrieveSingleSuccess(result) },
                     { error -> onRetrieveError(error) }
                 )
-        )
+        )*/
+
     }
 
     fun getWorkdayByDateByUserSync(authToken: String, date: String, userId: String): Workday? {
         var workday: Workday? = null
         try {
             onRetrieveStart()
-            workday = kolvApi.getWorkdayByDateByUser(authToken, date, userId)
+            /*workday = kolvApi.getWorkdayByDateByUser(authToken, date, userId)
                 .doOnError { error -> onRetrieveError(error) }
-                .blockingSingle()
+                .blockingSingle()*/
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -60,7 +61,7 @@ class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
     }
 
     private fun onRetrieveSingleSuccess(result: Workday) {
-        workday.value = result
+       // workday.value = result
         Logger.i(result.toString())
     }
 

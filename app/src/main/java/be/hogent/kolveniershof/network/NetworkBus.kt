@@ -46,6 +46,7 @@ data class NetworkBus(
     val iconUrl: String
 )
 
+/*
 fun NetworkBusContainer.asDomainModel(): List<Bus> {
     return busses.map {
         Bus(
@@ -53,6 +54,20 @@ fun NetworkBusContainer.asDomainModel(): List<Bus> {
             name = it.name,
             color = it.color
         )
+    }
+}*/
+
+{
+
+    companion object {
+
+        fun asDomainModel(bus : NetworkBus): Bus {
+            return Bus(
+                id = bus.id,
+                name = bus.name,
+                color = bus.color
+            )
+        }
     }
 }
 

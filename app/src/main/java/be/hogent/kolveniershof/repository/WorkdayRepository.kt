@@ -9,6 +9,8 @@ import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 import be.hogent.kolveniershof.database.databaseModels.DatabaseWorkday
 import be.hogent.kolveniershof.domain.Comment
 import be.hogent.kolveniershof.domain.Workday
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val workdayDao: WorkdayDao, val workdayUserJOINDao: WorkdayUserJOINDao, val busUnitDao : BusUnitDao, val busRepository: BusRepository, val activityRepository: ActivityRepository, val lunchUnitDao: LunchUnitDao) : BaseRepo() {
@@ -28,9 +30,10 @@ class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val 
     }
 
     private fun databaseWorkdayToWorkday(dbWorkday : DatabaseWorkday) : Workday {
-        val daycareMentors =  workdayUserJOINDao.getUsersFromWorkday(dbWorkday.id).value!!.map { user -> DatabaseUser.toUser(user) }.toMutableList()
-        val morningBusses = busUnitDao.getBusUnitsFromWorkday(dbWorkday.id).value!!.filter { bus -> bus.isAfternoon == false } .map { bus -> busRepository.databaseBusUnitToBusUnit(bus)}.toMutableList()
-        val eveningBusses = busUnitDao.getBusUnitsFromWorkday(dbWorkday.id).value!!.filter { bus -> bus.isAfternoon == true } .map { bus -> busRepository.databaseBusUnitToBusUnit(bus)}.toMutableList()
+        val daycareMentors =  workdayUserJOINDao.getUsersFromWorkday(dbWorkday.id).observeOn(
+            AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { user -> DatabaseUser.toUser(user) }.toMutableList()
+        val morningBusses = busUnitDao.getBusUnitsFromWorkday(dbWorkday.id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().filter { bus -> bus.isAfternoon == false } .map { bus -> busRepository.databaseBusUnitToBusUnit(bus)}.toMutableList()
+        val eveningBusses = busUnitDao.getBusUnitsFromWorkday(dbWorkday.id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().filter { bus -> bus.isAfternoon == true } .map { bus -> busRepository.databaseBusUnitToBusUnit(bus)}.toMutableList()
         val amActivities = activityRepository.getAmActivitiesFromWorkday(dbWorkday.id)
         val pmActivities = activityRepository.getPmActivitiesFromWorkday(dbWorkday.id)
         val dayActivities = activityRepository.getDayActivitiesFromWorkday(dbWorkday.id)
@@ -42,7 +45,7 @@ class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val 
             morningBusses = morningBusses,
             eveningBusses = eveningBusses,
             amActivities = amActivities,
-            lunch = DatabaseLunchUnit.databaseLunchUnitToLunchUnit(lunchUnitDao.getLunchFromWorkday(dbWorkday.id).value!!),
+            lunch = DatabaseLunchUnit.databaseLunchUnitToLunchUnit(lunchUnitDao.getLunchFromWorkday(dbWorkday.id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet()),
             pmActivities = pmActivities,
             isHoliday = dbWorkday.isHoliday,
             comments = mutableListOf<Comment>(),

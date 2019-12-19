@@ -9,13 +9,18 @@ import be.hogent.kolveniershof.database.databaseModels.DatabaseActivityUnit
 import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 import be.hogent.kolveniershof.domain.Activity
 import be.hogent.kolveniershof.domain.ActivityUnit
+import be.hogent.kolveniershof.network.NetworkActivity
+import be.hogent.kolveniershof.network.NetworkActivityUnit
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUnitDao, val activityDao: ActivityDao, val activityUnitUserJOINDao: ActivityUnitUserJOINDao) : BaseRepo() {
 
     fun databaseActivityUnitToActivityUnit (dbActivity: DatabaseActivityUnit) : ActivityUnit {
 
-        val mentors = activityUnitUserJOINDao.getUsersFromActivity(dbActivity.id).value!!.map { user ->  DatabaseUser.toUser(user)}.filter { user -> user.isAdmin == true }.toMutableList()
-        val clients = activityUnitUserJOINDao.getUsersFromActivity(dbActivity.id).value!!.map { user ->  DatabaseUser.toUser(user)}.filter { user -> user.isAdmin == false }.toMutableList()
+        val mentors = activityUnitUserJOINDao.getUsersFromActivity(dbActivity.id).observeOn(
+            AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { user ->  DatabaseUser.toUser(user)}.filter { user -> user.isAdmin == true }.toMutableList()
+        val clients = activityUnitUserJOINDao.getUsersFromActivity(dbActivity.id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { user ->  DatabaseUser.toUser(user)}.filter { user -> user.isAdmin == false }.toMutableList()
         return ActivityUnit(
             id = dbActivity.id,
             activity = getActivityById(dbActivity.activityId),
@@ -23,20 +28,34 @@ class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUni
         )
     }
 
-    fun getActivityById (id: String) : Activity {
-        return DatabaseActivity.toActivity(activityDao.getActivityById(id).value!!)
+   fun getActivityById (id: String) : Activity {
+       if(isConnected()){
+           var tempAct : Activity? = null
+           kolvApi.getActivityById(id).subscribe{
+               act -> tempAct = NetworkActivity.asDomainModel(act)
+           }
+           return tempAct!!
+       }
+        return DatabaseActivity.toActivity(activityDao.getActivityById(id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
     }
 
     fun getAmActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
-        return activityUnitDao.getAmActivitiesFromWorkday(workdayId).value!!.map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
+        if(isConnected()){
+            var tempAct : Activity? = null
+            kolvApi.getAmActivitiesFromWorkday(workdayId).subscribe{
+                    act -> tempAct = NetworkActivity.asDomainModel(act)
+            }
+            return tempAct!!
+        }
+        return activityUnitDao.getAmActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
-
+/*
     fun getPmActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
-        return activityUnitDao.getPmActivitiesFromWorkday(workdayId).value!!.map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
+        return activityUnitDao.getPmActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
 
     fun getDayActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
-        return activityUnitDao.getDayActivitiesFromWorkday(workdayId).value!!.map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
-    }
+        return activityUnitDao.getDayActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
+    }*/
 
 }

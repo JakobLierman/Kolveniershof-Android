@@ -1,7 +1,6 @@
 package be.hogent.kolveniershof.api
 
-import be.hogent.kolveniershof.network.NetworkUser
-import be.hogent.kolveniershof.network.NetworkWorkday
+import be.hogent.kolveniershof.network.*
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.*
@@ -80,4 +79,9 @@ interface KolvApi {
     @GET("workdays/date/{date}/{user}")
     fun getWorkdayByDateByUser(@Header("Authorization") authToken: String, @Path("date") dateString: String, @Path("user") userId: String) : Observable<NetworkWorkday>
 
+    @GET("activities/id/{id}")
+    fun getActivityById(@Header("id") id: String) : Observable<NetworkActivity>
+
+    @GET("bus/id/{id}")
+    fun getBusById(@Header("id") id: String) : Observable<NetworkBus>
 }
