@@ -12,16 +12,16 @@ import java.util.*
 @Dao
 interface WorkdayDao : BaseDAO<DatabaseWorkday>{
     @Query("SELECT * FROM workday_table ORDER BY workday_date DESC")
-    fun getAllWorkdays(): Single<List<DatabaseWorkday>>
+    fun getAllWorkdays(): LiveData<List<DatabaseWorkday>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllWorkdays(vararg workdays: DatabaseWorkday)
 
     @Query("SELECT * FROM workday_table WHERE workday_id =:id")
-    fun getWorkdayById(id: String): Single<DatabaseWorkday>
+    fun getWorkdayById(id: String): LiveData<DatabaseWorkday>
 
     @Query("SELECT * FROM workday_table WHERE workday_date =:date")
-    fun getByWorkdateByDate(date: String): Single<DatabaseWorkday>
+    fun getByWorkdateByDate(date: String): LiveData<DatabaseWorkday>
 
     @Query("select count(*) from workday_table")
     fun getRowCount(): Int

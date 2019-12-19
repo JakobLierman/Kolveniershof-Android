@@ -29,33 +29,20 @@ class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUni
     }
 
    fun getActivityById (id: String) : Activity {
-       if(isConnected()){
-           var tempAct : Activity? = null
-           kolvApi.getActivityById(id).subscribe{
-               act -> tempAct = NetworkActivity.asDomainModel(act)
-           }
-           return tempAct!!
-       }
         return DatabaseActivity.toActivity(activityDao.getActivityById(id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
     }
 
     fun getAmActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
-        if(isConnected()){
-            var tempAct : Activity? = null
-            kolvApi.getAmActivitiesFromWorkday(workdayId).subscribe{
-                    act -> tempAct = NetworkActivity.asDomainModel(act)
-            }
-            return tempAct!!
-        }
+
         return activityUnitDao.getAmActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
-/*
+
     fun getPmActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
         return activityUnitDao.getPmActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
 
     fun getDayActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
         return activityUnitDao.getDayActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
-    }*/
+    }
 
 }

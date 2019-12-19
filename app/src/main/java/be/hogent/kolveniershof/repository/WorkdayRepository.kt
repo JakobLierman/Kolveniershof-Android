@@ -9,6 +9,7 @@ import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 import be.hogent.kolveniershof.database.databaseModels.DatabaseWorkday
 import be.hogent.kolveniershof.domain.Comment
 import be.hogent.kolveniershof.domain.Workday
+import be.hogent.kolveniershof.network.NetworkWorkday
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -52,5 +53,22 @@ class WorkdayRepository(private val kolvApi: KolvApi, val userDao: UserDao, val 
             dayActivities = dayActivities
 
             )
+    }
+
+    private fun networkWorkdayToWorkday(netWorkday : NetworkWorkday) : Workday {
+
+        return Workday(
+            id = netWorkday.id,
+            date = netWorkday.date,
+            daycareMentors = netWorkday.daycareMentors,
+            morningBusses = netWorkday.morningBusses,
+            eveningBusses = netWorkday.eveningBusses,
+            amActivities = netWorkday.amActivities,
+            lunch = netWorkday.lunch,
+            pmActivities = netWorkday.pmActivities,
+            isHoliday = netWorkday.isHoliday,
+            comments = netWorkday.comments,
+            dayActivities = netWorkday.dayActivities
+        )
     }
 }
