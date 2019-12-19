@@ -26,10 +26,10 @@ class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) : BaseR
                 kolvApi.getUserByEmail(email).subscribe { user -> tempUser = NetworkUser.asDomainModel(user)}
                 return tempUser!!
             }else {
-                return DatabaseUser.toUser(userDao.getUSerByEmail(email).value!!)
+                return DatabaseUser.toUser(userDao.getUSerByEmail(email).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
             }
         } else {
-             return DatabaseUser.toUser(userDao.getUSerByEmail(email).value!!)
+             return DatabaseUser.toUser(userDao.getUSerByEmail(email).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
         }
     }
 
@@ -42,10 +42,10 @@ class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) : BaseR
                 kolvApi.getUserById(id).subscribe { user -> tempUser = NetworkUser.asDomainModel(user)}
                 return tempUser!!
             }else {
-                return DatabaseUser.toUser(userDao.getUSerById(id).value!!)
+                return DatabaseUser.toUser(userDao.getUSerById(id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
             }
         } else {
-            return DatabaseUser.toUser(userDao.getUSerById(id).value!!)
+            return DatabaseUser.toUser(userDao.getUSerById(id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
         }
     }
 

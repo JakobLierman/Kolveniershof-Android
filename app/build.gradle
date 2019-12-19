@@ -45,6 +45,9 @@ dependencies {
     def lifecycle_version = '2.1.0'
     def glide_version = '4.10.0'
     def koin_version= '1.0.2'
+    def rxkotlin_version = '2.3.0'
+    def rxjava_version = '2.2.3'
+    def rxandroid_version = '2.1.0'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -97,4 +100,9 @@ dependencies {
     implementation "androidx.room:room-runtime:2.2.1"
     annotationProcessor 'androidx.room:room-compiler:2.2.1'
     kapt "android.arch.persistence.room:compiler:1.1.1"
+    implementation "androidx.room:room-rxjava2:2.2.1"
+
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
 }

@@ -6,6 +6,8 @@ import androidx.test.runner.AndroidJUnit4
 import be.hogent.kolveniershof.database.*
 import be.hogent.kolveniershof.database.DAO.*
 import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -49,8 +51,8 @@ class KolveniershofDatabaseTest {
     fun insertAndGetUser() {
         val user = DatabaseUser(userId = "1")
         userDao.insertItem(user)
-        val dbuser = userDao.getAllUsers().value?.last()
-        Assert.assertEquals(user.userId, dbuser?.userId)
+        val dbuser = userDao.getAllUsers().observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().last()
+        Assert.assertEquals(user.userId, dbuser.userId)
     }
 
     @Test
