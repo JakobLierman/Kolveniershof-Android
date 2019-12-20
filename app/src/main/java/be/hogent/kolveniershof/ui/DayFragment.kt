@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -157,7 +158,9 @@ class DayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Fill view with content
-        showDay(view, DateTime.parse(workdayDate, DateTimeFormat.forPattern("dd_MM_yyyy").withLocale(Locale.getDefault())))
+        val time = DateTimeFormat.forPattern("dd_MM_yyyy").withLocale(Locale.getDefault())
+        Log.i("datum", time.toString())
+        showDay(view, DateTime.parse(workdayDate, time))
         if (isEmpty) {
             showEmptyDay(view, false)
             isEmpty = false

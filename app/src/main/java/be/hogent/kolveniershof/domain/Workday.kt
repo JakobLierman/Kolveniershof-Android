@@ -10,8 +10,6 @@ data class Workday(
     val id: String,
     @field:Json(name = "date")
     val date: Date,
-    @field:Json(name = "daycareMentors")
-    val daycareMentors: MutableList<User>,
     @field:Json(name = "morningBusses")
     val morningBusses: MutableList<BusUnit>,
     @field:Json(name  = "amActivities")

@@ -17,6 +17,9 @@ import be.hogent.kolveniershof.network.NetworkUser
 import be.hogent.kolveniershof.network.NetworkWorkday
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import java.sql.Date
 import java.util.*
 
 class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao, val workdayUserJOINDao: WorkdayUserJOINDao, val busRepository: BusRepository, val activityRepository: ActivityRepository, val lunchUnitDao: LunchUnitDao, val c: Context) : BaseRepo(c) {
@@ -35,6 +38,10 @@ class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao
 
     fun getWorkdayByDateByUser(authToken: String, date: String, userId: String):LiveData<Workday>{
         checkDatabaseWorkdays(authToken)
+        val time = DateTimeFormat.forPattern("dd_MM_yyyy").withLocale(Locale.getDefault())
+
+        Log.i("datum", DateTime.parse(date, time).toString())
+        val date = time.parseDateTime(date).toDate().toString()
         return Transformations.map(workdayDao.getByWorkdateByDate(date)) { dbWorkday : DatabaseWorkday? -> run {
             if (dbWorkday == null) {
                 null
@@ -48,14 +55,13 @@ class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao
         //Check if empty, if true --> check if connected and get directly from API
 
         val workdaysList : List<Workday>
-        if( isConnected()){
+        if( workdayDao.getRowCount() <= 0 && isConnected()){
             workdaysList = kolvApi.getWorkdays(authToken).subscribeOn(Schedulers.io()).blockingSingle()
            workdaysList.forEach { wd -> saveWorkdayToDatabase(wd) }
         }
     }
 
     private fun databaseWorkdayToWorkday(dbWorkday : DatabaseWorkday) : Workday {
-        val daycareMentors =  workdayUserJOINDao.getUsersFromWorkday(dbWorkday.id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { user -> DatabaseUser.toUser(user) }.toMutableList()
         val morningBusses = busRepository.getBusUnitFromWorkday(dbWorkday.id, false)
         val eveningBusses = busRepository.getBusUnitFromWorkday(dbWorkday.id, true)
         val amActivities = activityRepository.getAmActivitiesFromWorkday(dbWorkday.id)
@@ -64,8 +70,7 @@ class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao
 
         return Workday(
             id = dbWorkday.id,
-            date = Date(dbWorkday.date),
-            daycareMentors = daycareMentors,
+            date = Date.valueOf(dbWorkday.date),
             morningBusses = morningBusses,
             eveningBusses = eveningBusses,
             amActivities = amActivities,
@@ -92,8 +97,16 @@ class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao
         activityRepository.addAmActivities(workday.amActivities, workday.id)
         activityRepository.addPmActivities(workday.pmActivities,workday.id)
         activityRepository.addDayActivities(workday.dayActivities,workday.id)
-        busRepository.addBusses(workday.morningBusses,workday.id)
-        busRepository.addBusses(workday.eveningBusses,workday.id)
+        busRepository.addBusses(workday.morningBusses,workday.id, true)
+        busRepository.addBusses(workday.eveningBusses,workday.id, false)
+        if(workday.lunch != null){
+        lunchUnitDao.insertItem(DatabaseLunchUnit(
+            id = workday.lunch.id,
+            workdayId = workday.id,
+            luch = workday.lunch.lunch
+            ))
+        }
+
 
 
 
