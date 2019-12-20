@@ -110,12 +110,12 @@ interface KolvApi {
     fun getWeekByDateByUser(@Header("Authorization") authToken: String, @Path("weekdate") dateString: String, @Path("user") userId: String) : Observable<List<Workday>>
 
     /**
-     * Gets week of workdays by date in week by user
+     * Post comment for logged in user at workday
      *
      * @param authToken
      * @param workdayId
      * @param comment
-     *
+     * @return
      */
     @FormUrlEncoded
     @POST("workdays/id/{workdayId}/comments")
@@ -123,8 +123,17 @@ interface KolvApi {
         @Header("Authorization") authToken: String,
         @Path("workdayId") workdayId: String,
         @Field("comment") comment: String
-    ): Single<Comment>
+    ): Observable<Comment>
 
+    /**
+     * Patch comment for logged in user at workday
+     *
+     * @param authToken
+     * @param workdayId
+     * @param commentId
+     * @param comment
+     * @return
+     */
     @FormUrlEncoded
     @PATCH("workdays/id/{workdayId}/comments/{commentId}")
     fun patchComment(
@@ -132,7 +141,6 @@ interface KolvApi {
         @Path("workdayId") workdayId: String,
         @Path("commentId") commentId: String,
         @Field("comment") comment: String
-    ): Single<Comment>
-
+    ): Observable<Comment>
 
 }

@@ -83,23 +83,39 @@ class DayViewModel(val kolvApi: KolvApi) : ViewModel() {
     }
 
     fun postComment(authToken: String, workdayId: String, commentText: String) {
-        try {
+        disposables.add(
             kolvApi.postComment(authToken, workdayId, commentText)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
+                .subscribe(
+                    { result -> onRetrieveCommentSuccess(result) },
+                    { error -> onRetrieveError(error) }
+                )
+        )
     }
-    fun patchComment(authToken: String, workdayId: String, comment: Comment)
-    {
-        try{
+
+    fun patchComment(authToken: String, workdayId: String, comment: Comment) {
+        disposables.add(
             kolvApi.patchComment(authToken, workdayId, comment.id, comment.comment)
-        }catch (e:Exception){
-            e.printStackTrace()
-        }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
+                .subscribe(
+                    { result -> onRetrieveCommentSuccess(result) },
+                    { error -> onRetrieveError(error) }
+                )
+        )
     }
 
     private fun onRetrieveSingleSuccess(result: Workday) {
         workday.value = result
+        Logger.i(result.toString())
+    }
+
+    private fun onRetrieveCommentSuccess(result: Comment) {
         Logger.i(result.toString())
     }
 

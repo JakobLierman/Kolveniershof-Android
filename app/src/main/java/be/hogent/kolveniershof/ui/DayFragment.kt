@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -257,31 +258,28 @@ class DayFragment : Fragment() {
         try {
             buttonSendComment = view.findViewById(R.id.buttonSendComment)
             buttonSendComment.setOnClickListener {
-                if (checkCommentIsEmpty(userComment)) {
+                if (userComment == null) {
                     viewModel.postComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, inputComment.text.toString())
                 } else {
-                    userComment!!.comment = inputComment.text.toString()
+                    userComment.comment = inputComment.text.toString()
                     viewModel.patchComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, userComment)
                 }
             }
         }catch (e : Exception) {
-            inputComment.setOnEditorActionListener{ v, actionId, event ->
-                        if (checkCommentIsEmpty(userComment) /*&& !isAdmin*/) {
-                            viewModel.postComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, inputComment.text.toString())
-                        } else {
-                            userComment!!.comment = inputComment.text.toString()
-                            viewModel.patchComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, userComment)
-                        }
+            inputComment.setOnKeyListener { _, i, keyEvent ->
+                if ((keyEvent.action == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    if (userComment == null /*&& !isAdmin*/) {
+                        viewModel.postComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, inputComment.text.toString())
+                    } else {
+                        userComment.comment = inputComment.text.toString()
+                        viewModel.patchComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, userComment)
+                    }
                     true
+                }
+                false
             }
         }
-    }
-
-    private fun checkCommentIsEmpty(userComment: Comment?): Boolean {
-        if (userComment == null) {
-            return true
-        }
-        return false
     }
 
 
