@@ -1,19 +1,21 @@
 package be.hogent.kolveniershof.injection
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import be.hogent.kolveniershof.adapters.DateAdapter
 import be.hogent.kolveniershof.api.KolvApi
 import be.hogent.kolveniershof.repository.KolvRepository
 import be.hogent.kolveniershof.util.Constants
+import be.hogent.kolveniershof.util.SharedPreferencesEnum
 import be.hogent.kolveniershof.viewmodels.DayViewModel
 import be.hogent.kolveniershof.viewmodels.UserViewModel
 import com.squareup.moshi.Moshi
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Cache
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
@@ -105,4 +107,13 @@ val repositoryModule = module {
     }
 
     factory { provideKolvRepository(get()/*, get()*/) }
+}
+
+val sharedPreferencesModule = module {
+
+    fun provideSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(SharedPreferencesEnum.PREFNAME.toString(), Context.MODE_PRIVATE)
+    }
+
+    single { provideSharedPreferences(get()) }
 }
