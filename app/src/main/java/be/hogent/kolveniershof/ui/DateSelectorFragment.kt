@@ -16,6 +16,7 @@ import be.hogent.kolveniershof.R
 import be.hogent.kolveniershof.adapters.UserViewHolder
 import be.hogent.kolveniershof.databinding.FragmentDateSelectorBinding
 import be.hogent.kolveniershof.model.User
+import be.hogent.kolveniershof.util.SharedPreferencesEnum
 import be.hogent.kolveniershof.viewmodels.DayViewModel
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -71,7 +72,7 @@ class DateSelectorFragment : Fragment() {
         }
 
         // Initialize shared preferences
-        sharedPrefs = activity!!.getSharedPreferences("USER_CREDENTIALS", Context.MODE_PRIVATE)
+        sharedPrefs = activity!!.getSharedPreferences(SharedPreferencesEnum.PREFNAME.toString(), Context.MODE_PRIVATE)
 
         setHasOptionsMenu(true)
 
@@ -213,7 +214,7 @@ class DateSelectorFragment : Fragment() {
         //inflater.inflate(R.menu.main, menu)
 
         // Hide userSelector button if no admin permissions
-        if (!sharedPrefs.getBoolean("ADMIN", false)) {
+        if (!sharedPrefs.getBoolean(SharedPreferencesEnum.ADMIN.string, false)) {
             val item = menu.findItem(R.id.action_userSelector)
             item.isVisible = false
             activity!!.invalidateOptionsMenu()

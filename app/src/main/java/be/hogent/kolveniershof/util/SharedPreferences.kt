@@ -2,6 +2,18 @@ package be.hogent.kolveniershof.util
 
 import android.content.SharedPreferences
 
+enum class SharedPreferencesEnum(val string: String) {
+        PREFNAME("USER_CREDENTIALS"),
+        ID("ID"),
+        EMAIL("EMAIL"),
+        FIRSTNAME("FIRSTNAME"),
+        LASTNAME("LASTNAME"),
+        IMGURL("IMGURL"),
+        ADMIN("ADMIN"),
+        TOKEN("TOKEN"),
+        ISLOGGEDIN("ISLOGGEDIN")
+    }
+
 class SharedPreferences constructor(private val mSharedPreferences: SharedPreferences) {
 
     fun putInt(enum: SharedPreferencesEnum, data: Int) {

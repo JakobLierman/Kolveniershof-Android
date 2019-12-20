@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 
 import be.hogent.kolveniershof.R
 import be.hogent.kolveniershof.databinding.FragmentLoginBinding
+import be.hogent.kolveniershof.util.SharedPreferencesEnum
 import be.hogent.kolveniershof.viewmodels.UserViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -62,18 +63,19 @@ class LoginFragment : Fragment() {
                 val loggedInUser = viewModel.login(emailInput.text.toString(), passwordInput.text.toString())
 
                 // Save logged in user
-                val sharedPreferences = activity!!.getSharedPreferences("USER_CREDENTIALS",
+                val sharedPreferences = activity!!.getSharedPreferences(
+                    SharedPreferencesEnum.PREFNAME.toString(),
                     Context.MODE_PRIVATE
                 )
                 sharedPreferences.edit()
-                    .putString("ID", loggedInUser.id)
-                    .putString("EMAIL", loggedInUser.email)
-                    .putString("FIRSTNAME", loggedInUser.firstName)
-                    .putString("LASTNAME", loggedInUser.lastName)
-                    .putString("IMGURL", loggedInUser.imgUrl)
-                    .putBoolean("ADMIN", loggedInUser.isAdmin)
-                    .putString("TOKEN", "Bearer " + loggedInUser.token)
-                    .putBoolean("ISLOGGEDIN", true)
+                    .putString(SharedPreferencesEnum.ID.string, loggedInUser.id)
+                    .putString(SharedPreferencesEnum.EMAIL.string, loggedInUser.email)
+                    .putString(SharedPreferencesEnum.FIRSTNAME.string, loggedInUser.firstName)
+                    .putString(SharedPreferencesEnum.LASTNAME.string, loggedInUser.lastName)
+                    .putString(SharedPreferencesEnum.IMGURL.string, loggedInUser.imgUrl)
+                    .putBoolean(SharedPreferencesEnum.ADMIN.string, loggedInUser.isAdmin)
+                    .putString(SharedPreferencesEnum.TOKEN.string, "Bearer " + loggedInUser.token)
+                    .putBoolean(SharedPreferencesEnum.PREFNAME.string, true)
                     .apply()
 
                 // Open MainActivity
