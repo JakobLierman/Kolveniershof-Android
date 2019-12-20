@@ -68,6 +68,36 @@ class DayViewModel(val kolvApi: KolvApi) : ViewModel() {
         return workday
     }
 
+    fun getWeekByDateByUser(authToken: String, date: String, userId: String) {
+        disposables.add(
+            kolvApi.getWeekByDateByUser(authToken, date, userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
+                .subscribe(
+                    { result -> onRetrieveListSuccess(result) },
+                    { error -> onRetrieveError(error) }
+                )
+        )
+    }
+
+    fun postComment(authToken: String, workdayId: String, commentText: String) {
+        try {
+            kolvApi.postComment(authToken, workdayId, commentText)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    fun patchComment(authToken: String, workdayId: String, comment: Comment)
+    {
+        try{
+            kolvApi.patchComment(authToken, workdayId, comment.id, comment.comment)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
     private fun onRetrieveSingleSuccess(result: Workday) {
         workday.value = result
         Logger.i(result.toString())
