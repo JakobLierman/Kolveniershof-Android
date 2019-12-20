@@ -19,6 +19,7 @@ import be.hogent.kolveniershof.databinding.FragmentLoginBinding
 import be.hogent.kolveniershof.viewmodels.UserViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import org.koin.android.viewmodel.ext.android.viewModel
 import javax.security.auth.login.LoginException
 
 /**
@@ -32,14 +33,12 @@ class LoginFragment : Fragment() {
     private lateinit var passwordInput: TextInputEditText
     private lateinit var passwordInputLayout: TextInputLayout
 
-    private lateinit var viewModel: UserViewModel
+    private val viewModel by viewModel<UserViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
-
         val binding: FragmentLoginBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
         binding.viewmodel = viewModel

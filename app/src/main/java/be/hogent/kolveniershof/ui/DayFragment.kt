@@ -29,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 private const val ARG_WORKDAY_DATE = "workdayDate"
@@ -51,7 +52,7 @@ class DayFragment : Fragment() {
             }
     }
 
-    private lateinit var viewModel: DayViewModel
+    private val viewModel by viewModel<DayViewModel>()
     private lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var textDayName: TextView
@@ -98,9 +99,6 @@ class DayFragment : Fragment() {
 
         // Get shared preferences
         sharedPrefs = activity!!.getSharedPreferences("USER_CREDENTIALS", Context.MODE_PRIVATE)
-
-        // Instantiate viewModel
-        viewModel = ViewModelProviders.of(this).get(DayViewModel::class.java)
 
         // Get workday
         arguments?.getString("workdayDate")?.let { viewModel.getWorkdayByDateByUser(sharedPrefs.getString("TOKEN", "")!!, it, sharedPrefs.getString("ID", "")!!) }

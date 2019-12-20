@@ -11,7 +11,7 @@ import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
 import javax.security.auth.login.LoginException
 
-class UserViewModel(val repo: KolvRepository) : ViewModel() {
+class UserViewModel(val kolvApi: KolvApi) : ViewModel() {
 
     val user = MutableLiveData<User>()
     val loadingVisibility = MutableLiveData<Int>()
