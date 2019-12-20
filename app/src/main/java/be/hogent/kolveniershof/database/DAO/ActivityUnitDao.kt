@@ -20,11 +20,11 @@ interface ActivityUnitDao : BaseDAO<DatabaseActivityUnit>{
     fun getActivityById(id: String): Single<DatabaseActivityUnit>
 
     @Query("SELECT * FROM activityUnit_table WHERE workday_id =:workdayId AND isAm == 1")
-    fun getAmActivitiesFromWorkday(workdayId: String) : Single<List<DatabaseActivityUnit>>
+    fun getAmActivitiesFromWorkday(workdayId: String) : List<DatabaseActivityUnit>
 
     @Query("SELECT * FROM activityUnit_table WHERE workday_id =:workdayId AND isPm == 1")
-    fun getPmActivitiesFromWorkday(workdayId: String) : Single<List<DatabaseActivityUnit>>
+    fun getPmActivitiesFromWorkday(workdayId: String) : List<DatabaseActivityUnit>
 
     @Query("SELECT * FROM activityUnit_table WHERE workday_id =:workdayId AND isDay == 1")
-    fun getDayActivitiesFromWorkday(workdayId: String) : Single<List<DatabaseActivityUnit>>
+    fun getDayActivitiesFromWorkday(workdayId: String) : List<DatabaseActivityUnit>
 }
