@@ -12,10 +12,10 @@ import be.hogent.kolveniershof.domain.ActivityUnit
             entity = DatabaseActivity::class,
             parentColumns = arrayOf("activity_id"),
             childColumns = arrayOf("activity_id"))
-        ), ForeignKey(
+        ), (ForeignKey(
     entity = DatabaseWorkday::class,
     parentColumns = arrayOf("workday_id"),
-    childColumns = arrayOf("workday_id")
+    childColumns = arrayOf("workday_id"))
 )])
 data class DatabaseActivityUnit constructor(
     @ColumnInfo(name = "activityUnit_id")

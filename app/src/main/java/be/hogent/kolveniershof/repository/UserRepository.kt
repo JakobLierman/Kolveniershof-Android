@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import javax.security.auth.login.LoginException
 
-class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) : BaseRepo() {
+class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao, val c: Context) : BaseRepo(c) {
 
     fun getUser(email : String): User {
 
@@ -23,7 +23,7 @@ class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) : BaseR
         if (userDao.getRowCount() <= 0) {
             if(isConnected()){
                 var tempUser : User? = null
-                kolvApi.getUserByEmail(email).subscribe { user -> tempUser = NetworkUser.asDomainModel(user)}
+                kolvApi.getUserByEmail(email).subscribe { user -> tempUser = user}
                 return tempUser!!
             }else {
                 return DatabaseUser.toUser(userDao.getUSerByEmail(email).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
@@ -39,7 +39,7 @@ class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) : BaseR
         if (userDao.getRowCount() <= 0) {
             if(isConnected()){
                 var tempUser : User? = null
-                kolvApi.getUserById(id).subscribe { user -> tempUser = NetworkUser.asDomainModel(user)}
+                kolvApi.getUserById(id).subscribe { user -> tempUser = user}
                 return tempUser!!
             }else {
                 return DatabaseUser.toUser(userDao.getUSerById(id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
@@ -51,9 +51,9 @@ class UserRepository(private val kolvApi: KolvApi, val userDao: UserDao) : BaseR
 
     fun login(email: String, password: String): User {
         try {
-            return NetworkUser.asDomainModel(kolvApi.login(email, password)
+            return kolvApi.login(email, password)
                 .doOnError { error -> onRetrieveError(error) }
-                .blockingGet())
+                .blockingGet()
 
         } catch (e: Exception) {
             throw LoginException((e as HttpException).response()!!.errorBody()!!.string())

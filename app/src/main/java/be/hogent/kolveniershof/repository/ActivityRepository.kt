@@ -1,5 +1,6 @@
 package be.hogent.kolveniershof.repository
 
+import android.content.Context
 import be.hogent.kolveniershof.api.KolvApi
 import be.hogent.kolveniershof.database.DAO.ActivityDao
 import be.hogent.kolveniershof.database.DAO.ActivityUnitDao
@@ -14,7 +15,7 @@ import be.hogent.kolveniershof.network.NetworkActivityUnit
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUnitDao, val activityDao: ActivityDao, val activityUnitUserJOINDao: ActivityUnitUserJOINDao) : BaseRepo() {
+class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUnitDao, val activityDao: ActivityDao, val activityUnitUserJOINDao: ActivityUnitUserJOINDao, val c: Context) : BaseRepo(c) {
 
     fun databaseActivityUnitToActivityUnit (dbActivity: DatabaseActivityUnit) : ActivityUnit {
 
@@ -45,20 +46,30 @@ class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUni
         return activityUnitDao.getDayActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
 
-    fun addActivities(activities : MutableList<ActivityUnit>, wdId: String) {
-        val dbActivities = activities.map { a ->  activityUnitToDatabaseActivityUnit(a, wdId) }
+    fun addAmActivities(activities : MutableList<ActivityUnit>, wdId: String) {
+        val dbActivities = activities.map { a ->  activityUnitToDatabaseActivityUnit(a, wdId, true, false, false) }
         activityUnitDao.insertItems(dbActivities)
     }
 
-    fun activityUnitToDatabaseActivityUnit (unit : ActivityUnit, wdId: String) : DatabaseActivityUnit {
+    fun addPmActivities(activities : MutableList<ActivityUnit>, wdId: String) {
+        val dbActivities = activities.map { a ->  activityUnitToDatabaseActivityUnit(a, wdId, false, true, true) }
+        activityUnitDao.insertItems(dbActivities)
+    }
+
+    fun addDayActivities(activities : MutableList<ActivityUnit>, wdId: String) {
+        val dbActivities = activities.map { a ->  activityUnitToDatabaseActivityUnit(a, wdId, false, false, true) }
+        activityUnitDao.insertItems(dbActivities)
+    }
+
+    fun activityUnitToDatabaseActivityUnit (unit : ActivityUnit, wdId: String, isAm: Boolean, isPm: Boolean, isDay: Boolean) : DatabaseActivityUnit {
 
         val dbActivityUnit = DatabaseActivityUnit(
             id = unit.id,
             workdayId = wdId,
             activityId = unit.activity.id,
-            isAm = true,
-            isPm = false,
-            isDay = false
+            isAm = isAm,
+            isPm = isPm,
+            isDay = isDay
         )
         addActivity(unit.activity)
 

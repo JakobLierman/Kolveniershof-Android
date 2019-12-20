@@ -18,6 +18,7 @@ class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
     lateinit var workday : LiveData<Workday>
     val loadingVisibility = MutableLiveData<Int>()
     val objectVisibility = MutableLiveData<Int>()
+    var isEmpty = true
 
     private var disposables = CompositeDisposable()
 
@@ -27,7 +28,7 @@ class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
     }
 
     fun getWorkdayById(authToken: String, id: String) {
-         //   workday = repo.getWorkdayById(id)
+        workday = repo.getWorkdayById(authToken, id)
     }
 
     fun getWorkdayByDateByUser(authToken: String, date: String, userId: String) {
@@ -46,19 +47,9 @@ class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
 
     }
 
-    fun getWorkdayByDateByUserSync(authToken: String, date: String, userId: String): Workday? {
-        var workday: Workday? = null
-        try {
-            onRetrieveStart()
-            /*workday = kolvApi.getWorkdayByDateByUser(authToken, date, userId)
-                .doOnError { error -> onRetrieveError(error) }
-                .blockingSingle()*/
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            onRetrieveFinish()
-        }
-        return workday
+    fun getWorkdayByDateByUserSync(authToken: String, date: String, userId: String): LiveData<Workday> {
+        return repo.getWorkdayByDateByUser(authToken, date, userId)
+
     }
 
     private fun onRetrieveSingleSuccess(result: Workday) {

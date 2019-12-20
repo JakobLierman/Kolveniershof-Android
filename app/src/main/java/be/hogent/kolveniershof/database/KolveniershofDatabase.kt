@@ -24,6 +24,7 @@ abstract class KolveniershofDatabase  : RoomDatabase() {
     abstract fun LunchUnitDao() : LunchUnitDao
     abstract fun UserDao() : UserDao
     abstract fun WorkdayDao() : WorkdayDao
+    abstract fun WorkdayUserJOINDao() : WorkdayUserJOINDao
 
     companion object {
         @Volatile

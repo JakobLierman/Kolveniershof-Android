@@ -3,9 +3,9 @@ package be.hogent.kolveniershof.repository
 import android.content.Context
 import android.net.ConnectivityManager
 
-abstract class BaseRepo {
+abstract class BaseRepo(val context: Context) {
 
-    lateinit var context: Context
+
 
     /**
      * Check whether the phone has internet connectivity

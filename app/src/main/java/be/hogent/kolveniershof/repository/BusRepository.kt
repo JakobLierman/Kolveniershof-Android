@@ -1,5 +1,6 @@
 package be.hogent.kolveniershof.repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import be.hogent.kolveniershof.api.KolvApi
 import be.hogent.kolveniershof.database.DAO.BusDao
@@ -14,7 +15,7 @@ import be.hogent.kolveniershof.network.NetworkBus
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDao: BusDao, val userRepository: UserRepository, val busUnitUserJOINDao: BusUnitUserJOINDao) : BaseRepo() {
+class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDao: BusDao, val userRepository: UserRepository, val busUnitUserJOINDao: BusUnitUserJOINDao, val c: Context) : BaseRepo(c) {
 
     //TODO: uitzoeken of best instance van userRepo of userDao
 
@@ -35,7 +36,7 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
         if(isConnected()){
             var tempBus : Bus? = null
             kolvApi.getBusById(id).subscribe{
-                    bus -> tempBus = NetworkBus.asDomainModel(bus)
+                    bus -> tempBus =bus
             }
             return tempBus!!
         } else

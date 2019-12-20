@@ -62,7 +62,7 @@ data class NetworkWorkday(
     @field:Json(name  = "amActivities")
     val amActivities: MutableList<ActivityUnit>,
     @field:Json(name = "lunch")
-    val lunch: LunchUnit,
+    val lunch: LunchUnit?,
     @field:Json(name = "pmActivities")
     val pmActivities: MutableList<ActivityUnit>,
     @field:Json(name = "dayActivities")
@@ -73,27 +73,7 @@ data class NetworkWorkday(
     val isHoliday: Boolean? = false,
     @field:Json(name = "comments")
     val comments: MutableList<Comment>
-) {
-
-    companion object {
-
-        fun asDomainModel(workday : NetworkWorkday): Workday {
-            return Workday(
-                    id = workday.id,
-                    date = workday.date,
-                    daycareMentors = workday.daycareMentors,
-                    morningBusses = workday.morningBusses,
-                    amActivities = workday.amActivities,
-                    lunch = workday.lunch,
-                    pmActivities = workday.pmActivities,
-                    eveningBusses = workday.eveningBusses,
-                    isHoliday = workday.isHoliday,
-                    comments = workday.comments,
-                    dayActivities = workday.dayActivities
-                )
-            }
-        }
-    }
+)
 
 
 

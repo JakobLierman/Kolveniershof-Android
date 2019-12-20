@@ -15,6 +15,7 @@ import be.hogent.kolveniershof.R
 import be.hogent.kolveniershof.databinding.FragmentDateSelectorBinding
 import be.hogent.kolveniershof.viewmodels.DayViewModel
 import org.joda.time.DateTime
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 // Number of pages in ViewPager (8 weeks total)
@@ -35,7 +36,7 @@ class DateSelectorFragment : Fragment() {
             }
     }
 
-    private lateinit var viewModel: DayViewModel
+    private val viewModel = viewModel<DayViewModel>()
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var mPager: ViewPager
     private lateinit var dateSelectorMinusTwo: DateButton
@@ -54,7 +55,7 @@ class DateSelectorFragment : Fragment() {
         sharedPrefs = activity!!.getSharedPreferences("USER_CREDENTIALS", Context.MODE_PRIVATE)
 
         // Instantiate viewModel
-        viewModel = ViewModelProviders.of(this).get(DayViewModel::class.java)
+
 
         setHasOptionsMenu(true)
     }
@@ -66,7 +67,7 @@ class DateSelectorFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding: FragmentDateSelectorBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_date_selector, container, false)
-        binding.viewmodel = viewModel
+        binding.viewmodel = viewModel.value
         binding.lifecycleOwner = this.viewLifecycleOwner
         return binding.root
     }

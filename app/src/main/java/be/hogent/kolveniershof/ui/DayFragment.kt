@@ -29,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 private const val ARG_WORKDAY_DATE = "workdayDate"
@@ -51,7 +52,7 @@ class DayFragment : Fragment() {
             }
     }
 
-    private lateinit var viewModel: DayViewModel
+    private val viewModel by viewModel<DayViewModel>()
     private lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var textDayName: TextView
@@ -100,7 +101,7 @@ class DayFragment : Fragment() {
         sharedPrefs = activity!!.getSharedPreferences("USER_CREDENTIALS", Context.MODE_PRIVATE)
 
         // Instantiate viewModel
-        viewModel = ViewModelProviders.of(this).get(DayViewModel::class.java)
+
 
         // Get workday
         arguments?.getString("workdayDate")?.let { viewModel.getWorkdayByDateByUser(sharedPrefs.getString("TOKEN", "")!!, it, sharedPrefs.getString("ID", "")!!) }
@@ -112,7 +113,12 @@ class DayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var root: View?
-        val workday: Workday? = viewModel.workday.value//viewModel.getWorkdayByDateByUserSync(sharedPrefs.getString("TOKEN", "")!!, arguments?.getString("workdayDate")!!, sharedPrefs.getString("ID", "")!!)
+        var workday: Workday? = null
+        isEmpty = false
+        viewModel.getWorkdayByDateByUser(sharedPrefs.getString("TOKEN", "")!!, arguments?.getString("workdayDate")!!, sharedPrefs.getString("ID", "")!!)
+            viewModel.workday.observe(this, Observer {
+            w -> workday = w
+        })
         when {
                 workday == null -> {
                     isEmpty = true
@@ -129,7 +135,7 @@ class DayFragment : Fragment() {
                     binding.lifecycleOwner = this.viewLifecycleOwner
                     root = binding.root
                 }
-                workday.isHoliday!! -> {
+                workday!!.isHoliday!! -> {
                     val binding: FragmentEmptyHolidayBinding =
                         DataBindingUtil.inflate(inflater, R.layout.fragment_empty_holiday, container, false)
                     binding.viewmodel = viewModel
@@ -151,7 +157,11 @@ class DayFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // Fill view with content
         showDay(view, DateTime.parse(workdayDate, DateTimeFormat.forPattern("dd_MM_yyyy").withLocale(Locale.getDefault())))
-        if (isEmpty) showEmptyDay(view, false)
+        if (isEmpty) {
+            showEmptyDay(view, false)
+            isEmpty = false
+        }
+        else {
         viewModel.workday.observe(this, Observer { workday ->
             when {
                 isWeekend!! -> showWeekend(view, workday.comments[0].toString()) // todo
@@ -176,7 +186,7 @@ class DayFragment : Fragment() {
                         showBus(view, workday.eveningBusses[0], false)
                 }
             }
-        })
+        })}
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

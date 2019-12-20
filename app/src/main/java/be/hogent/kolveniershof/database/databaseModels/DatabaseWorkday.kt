@@ -12,7 +12,7 @@ data class DatabaseWorkday constructor(
     @PrimaryKey(autoGenerate = false)
     var id: String = "",
     @ColumnInfo(name = "workday_date")
-    var date: String,
+    var date: String = "",
 
     //TODO: Many to many user - workday
     /*@ColumnInfo(name = "workday_name")

@@ -1,5 +1,9 @@
 package be.hogent.kolveniershof.api
 
+import be.hogent.kolveniershof.domain.Activity
+import be.hogent.kolveniershof.domain.Bus
+import be.hogent.kolveniershof.domain.User
+import be.hogent.kolveniershof.domain.Workday
 import be.hogent.kolveniershof.network.*
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -19,7 +23,7 @@ interface KolvApi {
     fun login(
         @Field("email") email: String,
         @Field("password") password: String
-    ): Single<NetworkUser>
+    ): Single<User>
 
     /**
      * Checks is email is valid and unique
@@ -38,7 +42,7 @@ interface KolvApi {
      * @return user
      */
     @GET("users/{email}")
-    fun getUserByEmail(@Path("email") email: String): Observable<NetworkUser>
+    fun getUserByEmail(@Path("email") email: String): Observable<User>
 
     /**
      * Gets user by id
@@ -47,7 +51,7 @@ interface KolvApi {
      * @return user
      */
     @GET("users/id/{id}")
-    fun getUserById(@Path("id") id: String): Observable<NetworkUser>
+    fun getUserById(@Path("id") id: String): Observable<User>
 
     /**
      * Gets workdays
@@ -56,7 +60,7 @@ interface KolvApi {
      * @return workdays
      */
     @GET("workdays")
-    fun getWorkdays(@Header("Authorization") authToken: String) : Observable<List<NetworkWorkday>>
+    fun getWorkdays(@Header("Authorization") authToken: String) : Observable<List<Workday>>
 
     /**
      * Gets workday by id
@@ -66,7 +70,7 @@ interface KolvApi {
      * @return workday
      */
     @GET("workdays/id/{id}")
-    fun getWorkdayById(@Header("Authorization") authToken: String, @Path("id") id: String) : Observable<NetworkWorkday>
+    fun getWorkdayById(@Header("Authorization") authToken: String, @Path("id") id: String) : Observable<Workday>
 
     /**
      * Gets workday by date by user
@@ -77,11 +81,11 @@ interface KolvApi {
      * @return
      */
     @GET("workdays/date/{date}/{user}")
-    fun getWorkdayByDateByUser(@Header("Authorization") authToken: String, @Path("date") dateString: String, @Path("user") userId: String) : Observable<NetworkWorkday>
+    fun getWorkdayByDateByUser(@Header("Authorization") authToken: String, @Path("date") dateString: String, @Path("user") userId: String) : Observable<Workday>
 
     @GET("activities/id/{id}")
-    fun getActivityById(@Header("id") id: String) : Observable<NetworkActivity>
+    fun getActivityById(@Header("id") id: String) : Observable<Activity>
 
     @GET("bus/id/{id}")
-    fun getBusById(@Header("id") id: String) : Observable<NetworkBus>
+    fun getBusById(@Header("id") id: String) : Observable<Bus>
 }
