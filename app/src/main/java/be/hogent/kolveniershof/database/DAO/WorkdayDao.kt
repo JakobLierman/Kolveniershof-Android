@@ -23,6 +23,9 @@ interface WorkdayDao : BaseDAO<DatabaseWorkday>{
     @Query("SELECT * FROM workday_table WHERE workday_date =:date")
     fun getByWorkdateByDate(date: String): LiveData<DatabaseWorkday>
 
+    @Query("SELECT * FROM workday_table WHERE workday_table.workday_date =:date")
+    fun getWorkdayByDates(date: String): Single<DatabaseWorkday>
+
     @Query("select count(*) from workday_table")
     fun getRowCount(): Int
 

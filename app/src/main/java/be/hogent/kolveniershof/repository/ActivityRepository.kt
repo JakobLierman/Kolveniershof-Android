@@ -34,17 +34,23 @@ class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUni
         return DatabaseActivity.toActivity(activityDao.getActivityById(id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
     }
 
-    fun getAmActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
+    fun getAmActivitiesFromWorkday(workdayId: String) : List<DatabaseActivityUnit> {
+        val actUnit = activityUnitDao.getAmActivitiesFromWorkday(workdayId)
+         return actUnit//.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
+    }
+    /*val test =  busUnitDao.getBusUnitsFromWorkday(dbWorkdayId)
+        return test*/
 
-        return activityUnitDao.getAmActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
+    fun getPmActivitiesFromWorkday(workdayId: String) : List<DatabaseActivityUnit> {
+        val actUnit = activityUnitDao.getPmActivitiesFromWorkday(workdayId)
+        return actUnit
+        //return activityUnitDao.getPmActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
 
-    fun getPmActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
-        return activityUnitDao.getPmActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
-    }
-
-    fun getDayActivitiesFromWorkday(workdayId: String) : MutableList<ActivityUnit> {
-        return activityUnitDao.getDayActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
+    fun getDayActivitiesFromWorkday(workdayId: String) : List<DatabaseActivityUnit> {
+        val actUnit = activityUnitDao.getDayActivitiesFromWorkday(workdayId)
+        return actUnit
+        //return activityUnitDao.getDayActivitiesFromWorkday(workdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { activity -> databaseActivityUnitToActivityUnit(activity) }.toMutableList()
     }
 
     fun addAmActivities(activities : MutableList<ActivityUnit>, wdId: String) {

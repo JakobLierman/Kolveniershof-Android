@@ -76,7 +76,6 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
     }
     fun getBusUnitFromWorkday(dbWorkdayId:String, isAfternoon:Boolean): List<DatabaseBusUnit> {
        val test =  busUnitDao.getBusUnitsFromWorkday(dbWorkdayId)
-
-    return test
+        return test
     }
 }
