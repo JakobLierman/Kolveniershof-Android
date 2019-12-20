@@ -14,10 +14,10 @@ import be.hogent.kolveniershof.domain.User
             entity = DatabaseBus::class,
             parentColumns = arrayOf("bus_id"),
             childColumns = arrayOf("bus_id"))
-        ), ForeignKey(
+        ), (ForeignKey(
     entity = DatabaseWorkday::class,
     parentColumns = arrayOf("workday_id"),
-    childColumns = arrayOf("workday_id")
+    childColumns = arrayOf("workday_id"))
 )])
 data class DatabaseBusUnit constructor(
     @ColumnInfo(name = "busUnit_id")

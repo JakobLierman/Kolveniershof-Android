@@ -1,6 +1,7 @@
 package be.hogent.kolveniershof.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import be.hogent.kolveniershof.api.KolvApi
 import be.hogent.kolveniershof.database.DAO.BusDao
@@ -12,6 +13,7 @@ import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 import be.hogent.kolveniershof.domain.Bus
 import be.hogent.kolveniershof.domain.BusUnit
 import be.hogent.kolveniershof.network.NetworkBus
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -21,9 +23,10 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
 
     fun databaseBusUnitToBusUnit(dbBusUnit : DatabaseBusUnit) : BusUnit {
 
-        val mentors = busUnitUserJOINDao.getMentorsFromBus(dbBusUnit.id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(
-            Schedulers.io()).blockingGet().map { user ->  DatabaseUser.toUser(user)}.toMutableList()
-        val clients = busUnitUserJOINDao.getClientsFromBus(dbBusUnit.id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().map { user ->  DatabaseUser.toUser(user)}.toMutableList()
+        val mentors = busUnitUserJOINDao.getMentorsFromBus(dbBusUnit.id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).map { users ->  run {
+            val userss = users.map{ user -> DatabaseUser.toUser(user) }
+            userss
+        } }.blockingGet().toMutableList()
 
         return BusUnit(
             id = dbBusUnit.id,
@@ -33,17 +36,12 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
     }
 
     fun getBusById(id: String) : Bus {
-        if(isConnected()){
-            var tempBus : Bus? = null
-            kolvApi.getBusById(id).subscribe{
-                    bus -> tempBus =bus
-            }
-            return tempBus!!
-        } else
-        return databaseBusToBus(busDao.getBusById(id).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet())
+
+        return databaseBusToBus(busDao.getBusById(id))
     }
     fun addBusses(busses: MutableList<BusUnit>, workdayId:String, isMorning: Boolean){
         val dbBusses = busses.map { bus -> busUnitToDatabaseUnit(bus,workdayId, isMorning) }
+        busUnitDao.insertItems(dbBusses)
     }
     private fun busUnitToDatabaseUnit(unit : BusUnit,workdayId : String, isMorning: Boolean): DatabaseBusUnit{
         val dbBusUnit = DatabaseBusUnit(
@@ -52,10 +50,13 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
             workdayId = workdayId,
             isAfternoon = !isMorning
         )
+
         addBus(unit.bus)
+        Log.i("busses", dbBusUnit.toString())
         return dbBusUnit
     }
     private fun addBus(bus:Bus){
+        Log.i("busses", bus.id.toString())
         busDao.insertItem(busToDatabaseBus(bus))
     }
 
@@ -73,7 +74,9 @@ class BusRepository (val kolvApi: KolvApi, val busUnitDao: BusUnitDao, val busDa
             color = dbBus.color
         )
     }
-    fun getBusUnitFromWorkday(dbWorkdayId:String, isAfternoon:Boolean): MutableList<BusUnit>{
-       return busUnitDao.getBusUnitsFromWorkday(dbWorkdayId).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).blockingGet().filter { bus -> bus.isAfternoon == isAfternoon } .map { bus -> databaseBusUnitToBusUnit(bus)}.toMutableList()
+    fun getBusUnitFromWorkday(dbWorkdayId:String, isAfternoon:Boolean): List<DatabaseBusUnit> {
+       val test =  busUnitDao.getBusUnitsFromWorkday(dbWorkdayId)
+
+    return test
     }
 }

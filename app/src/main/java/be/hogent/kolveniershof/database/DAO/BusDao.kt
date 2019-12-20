@@ -10,9 +10,9 @@ import io.reactivex.Single
 @Dao
 interface BusDao : BaseDAO<DatabaseBus>{
     @Query("SELECT * FROM bus_table")
-    fun getAllBusses(): Single<List<DatabaseBus>>
+    fun getAllBusses(): List<DatabaseBus>
 
     @Query("SELECT * FROM bus_table WHERE bus_id =:id")
-    fun getBusById(id: String): Single<DatabaseBus>
+    fun getBusById(id: String): DatabaseBus
 
 }

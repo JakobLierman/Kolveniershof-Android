@@ -11,6 +11,7 @@ import be.hogent.kolveniershof.database.KolveniershofDatabase
 import be.hogent.kolveniershof.database.databaseModels.DatabaseLunchUnit
 import be.hogent.kolveniershof.database.databaseModels.DatabaseUser
 import be.hogent.kolveniershof.database.databaseModels.DatabaseWorkday
+import be.hogent.kolveniershof.domain.BusUnit
 import be.hogent.kolveniershof.domain.Comment
 import be.hogent.kolveniershof.domain.Workday
 import be.hogent.kolveniershof.network.NetworkUser
@@ -62,8 +63,8 @@ class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao
     }
 
     private fun databaseWorkdayToWorkday(dbWorkday : DatabaseWorkday) : Workday {
-        val morningBusses = busRepository.getBusUnitFromWorkday(dbWorkday.id, false)
-        val eveningBusses = busRepository.getBusUnitFromWorkday(dbWorkday.id, true)
+        val morningBusses = busRepository.getBusUnitFromWorkday(dbWorkday.id, false).map{ bus -> busRepository.databaseBusUnitToBusUnit(bus)}.toMutableList()
+        val eveningBusses = busRepository.getBusUnitFromWorkday(dbWorkday.id, true).map{ bus -> busRepository.databaseBusUnitToBusUnit(bus)}.toMutableList()
         val amActivities = activityRepository.getAmActivitiesFromWorkday(dbWorkday.id)
         val pmActivities = activityRepository.getPmActivitiesFromWorkday(dbWorkday.id)
         val dayActivities = activityRepository.getDayActivitiesFromWorkday(dbWorkday.id)
