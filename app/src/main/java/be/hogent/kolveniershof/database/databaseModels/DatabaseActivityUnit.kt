@@ -20,12 +20,12 @@ import be.hogent.kolveniershof.domain.ActivityUnit
 data class DatabaseActivityUnit constructor(
     @ColumnInfo(name = "activityUnit_id")
     @PrimaryKey(autoGenerate = false)
-    val id: String,
-    @ColumnInfo(name = "activity_id", index = true)
-    val workdayId: String,
+    val id: String = "",
     @ColumnInfo(name = "workday_id", index = true)
-    val activityId: String,
-    val isAm: Boolean,
-    val isPm: Boolean,
-    val isDay: Boolean
+    val workdayId: String = "",
+    @ColumnInfo(name = "activity_id", index = true)
+    val activityId: String = "",
+    val isAm: Boolean = false,
+    val isPm: Boolean = false,
+    val isDay: Boolean = false
 )

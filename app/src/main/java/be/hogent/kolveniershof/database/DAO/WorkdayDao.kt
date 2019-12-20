@@ -12,7 +12,7 @@ import java.util.*
 @Dao
 interface WorkdayDao : BaseDAO<DatabaseWorkday>{
     @Query("SELECT * FROM workday_table ORDER BY workday_date DESC")
-    fun getAllWorkdays(): LiveData<List<DatabaseWorkday>>
+    fun getAllWorkdays(): List<DatabaseWorkday>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllWorkdays(vararg workdays: DatabaseWorkday)

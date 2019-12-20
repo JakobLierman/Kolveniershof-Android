@@ -70,10 +70,14 @@ val networkModule = module {
 val databaseModule = module {
     fun provideDatabase(application: Application): KolveniershofDatabase {
 
-        return Room.databaseBuilder(application, KolveniershofDatabase::class.java, "kolveniershofdb")
+        val db =  Room.databaseBuilder(application, KolveniershofDatabase::class.java, "kolveniershofdb")
             // Allowing main thread queries, just for testing.
             .allowMainThreadQueries()
             .build()
+
+        db.clearAllTables()
+        return db
+
     }
 
     fun provideActivityDao(database: KolveniershofDatabase): ActivityDao {

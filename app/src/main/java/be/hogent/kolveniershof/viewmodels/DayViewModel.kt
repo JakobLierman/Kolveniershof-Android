@@ -14,11 +14,12 @@ import io.reactivex.schedulers.Schedulers
 
 class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
 
-    val workdays = MutableLiveData<List<Workday>>()
+    var workdays = MutableLiveData<List<Workday>>()
     lateinit var workday : LiveData<Workday>
     val loadingVisibility = MutableLiveData<Int>()
     val objectVisibility = MutableLiveData<Int>()
     var isEmpty = true
+
 
     private var disposables = CompositeDisposable()
 
@@ -33,6 +34,8 @@ class DayViewModel(val repo: WorkdayRepository) : ViewModel() {
 
     fun getWorkdayByDateByUser(authToken: String, date: String, userId: String) {
         workday= repo.getWorkdayByDateByUser(authToken, date, userId)
+         val test= repo.getWorkdays(authToken)
+        isEmpty = test.isEmpty()
         /*disposables.add(
             kolvApi.getWorkdayByDateByUser(authToken, date, userId)
                 .subscribeOn(Schedulers.io())

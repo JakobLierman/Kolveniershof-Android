@@ -1,6 +1,7 @@
 package be.hogent.kolveniershof.repository
 
 import android.content.Context
+import android.util.Log
 import be.hogent.kolveniershof.api.KolvApi
 import be.hogent.kolveniershof.database.DAO.ActivityDao
 import be.hogent.kolveniershof.database.DAO.ActivityUnitDao
@@ -72,11 +73,13 @@ class ActivityRepository (val kolvApi: KolvApi, val activityUnitDao: ActivityUni
             isDay = isDay
         )
         addActivity(unit.activity)
+        Log.i("test", dbActivityUnit.toString())
 
         return dbActivityUnit
     }
 
     fun addActivity(activity: Activity) {
+        Log.i("test", activity.id)
         activityDao.insertItem(activityToDatabaseActivity(activity))
     }
 

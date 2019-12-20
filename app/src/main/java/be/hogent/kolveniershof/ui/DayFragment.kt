@@ -115,6 +115,7 @@ class DayFragment : Fragment() {
         var root: View?
         var workday: Workday? = null
         isEmpty = false
+
         viewModel.getWorkdayByDateByUser(sharedPrefs.getString("TOKEN", "")!!, arguments?.getString("workdayDate")!!, sharedPrefs.getString("ID", "")!!)
             viewModel.workday.observe(this, Observer {
             w -> workday = w

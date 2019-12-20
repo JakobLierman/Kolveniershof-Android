@@ -1,6 +1,7 @@
 package be.hogent.kolveniershof.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -22,12 +23,9 @@ class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao
 
 
 
-    fun getWorkdays(authToken:String): LiveData<MutableList<Workday>> {
+    fun getWorkdays(authToken:String): List<DatabaseWorkday> {
         checkDatabaseWorkdays(authToken)
-        return Transformations.map(
-            workdayDao.getAllWorkdays(),
-            {list -> list.map { l -> databaseWorkdayToWorkday(l) }.toMutableList()}
-        )
+        return workdayDao.getAllWorkdays()
     }
 
     fun getWorkdayById(authToken: String,id: String): LiveData<Workday> {
@@ -48,8 +46,10 @@ class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao
 
     private fun checkDatabaseWorkdays(authToken: String){
         //Check if empty, if true --> check if connected and get directly from API
-        if( workdayDao.getRowCount() <= 0 && isConnected()){
-            val workdaysList = kolvApi.getWorkdays(authToken).subscribeOn(Schedulers.io()).blockingSingle()
+
+        val workdaysList : List<Workday>
+        if( isConnected()){
+            workdaysList = kolvApi.getWorkdays(authToken).subscribeOn(Schedulers.io()).blockingSingle()
            workdaysList.forEach { wd -> saveWorkdayToDatabase(wd) }
         }
     }
@@ -86,6 +86,7 @@ class WorkdayRepository(private val kolvApi: KolvApi, val workdayDao: WorkdayDao
             isHoliday = workday.isHoliday
         )
 
+        Log.i("test", dbWorkday.toString())
         workdayDao.insertItem(dbWorkday)
 
         activityRepository.addAmActivities(workday.amActivities, workday.id)
