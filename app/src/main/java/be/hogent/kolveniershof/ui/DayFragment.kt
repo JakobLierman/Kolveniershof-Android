@@ -9,7 +9,6 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,13 +16,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import be.hogent.kolveniershof.R
 import be.hogent.kolveniershof.databinding.FragmentDayBinding
 import be.hogent.kolveniershof.databinding.FragmentEmptyHolidayBinding
 import be.hogent.kolveniershof.databinding.FragmentWeekendBinding
 import be.hogent.kolveniershof.model.*
 import be.hogent.kolveniershof.util.GlideApp
+import be.hogent.kolveniershof.util.SharedPreferencesEnum
 import be.hogent.kolveniershof.viewmodels.DayViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.storage.FirebaseStorage
@@ -106,12 +105,12 @@ class DayFragment : Fragment() {
         }
 
         // Get shared preferences
-        sharedPrefs = activity!!.getSharedPreferences("USER_CREDENTIALS", Context.MODE_PRIVATE)
+        sharedPrefs = activity!!.getSharedPreferences(SharedPreferencesEnum.PREFNAME.toString(), Context.MODE_PRIVATE)
 
         // Get workday
         arguments?.getString("workdayDate")?.let {
             viewModel.getWorkdayByDateByUser(
-                sharedPrefs.getString("TOKEN", "")!!,
+                sharedPrefs.getString(SharedPreferencesEnum.TOKEN.string, "")!!,
                 it,
                 userId!!
             )

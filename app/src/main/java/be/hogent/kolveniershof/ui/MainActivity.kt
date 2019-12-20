@@ -27,6 +27,7 @@ import be.hogent.kolveniershof.R
 import be.hogent.kolveniershof.adapters.UserAdapter
 import be.hogent.kolveniershof.model.User
 import be.hogent.kolveniershof.util.GlideApp
+import be.hogent.kolveniershof.util.SharedPreferencesEnum
 import be.hogent.kolveniershof.viewmodels.UserViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.storage.FirebaseStorage
@@ -57,11 +58,11 @@ class MainActivity :
     private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = getSharedPreferences("USER_CREDENTIALS", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(SharedPreferencesEnum.PREFNAME.string, Context.MODE_PRIVATE)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
         
         // Check is user is logged in
-        if (!sharedPreferences.getBoolean("ISLOGGEDIN", false)) {
+        if (!sharedPreferences.getBoolean(SharedPreferencesEnum.ISLOGGEDIN.string, false)) {
             // Open AuthActivity
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
@@ -78,7 +79,7 @@ class MainActivity :
         if (main_detail_container != null ) {
             twoPane = true
         }
-        if(sharedPreferences.getBoolean("ADMIN", false) && twoPane){
+        if(sharedPreferences.getBoolean(SharedPreferencesEnum.ADMIN.string, false) && twoPane){
             fillListView()
         }
 
@@ -100,7 +101,7 @@ class MainActivity :
         val navHeaderName = headerView.findViewById<TextView>(R.id.nav_header_name)
         val navHeaderEmail = headerView.findViewById<TextView>(R.id.nav_header_email)
         // Load image
-        val imgUrl = sharedPreferences.getString("IMGURL", "")!!
+        val imgUrl = sharedPreferences.getString(SharedPreferencesEnum.IMGURL.string, "")!!
         val img = try {
             FirebaseStorage.getInstance().reference.child(imgUrl)
         } catch (e: Exception) {
@@ -117,10 +118,10 @@ class MainActivity :
             .circleCrop()
             .into(navHeaderImage)
         // Load name
-        navHeaderName.text = (sharedPreferences.getString("FIRSTNAME", getString(R.string.app_name)) + " " +
-                sharedPreferences.getString("LASTNAME", ""))
+        navHeaderName.text = (sharedPreferences.getString(SharedPreferencesEnum.FIRSTNAME.string, getString(R.string.app_name)) + " " +
+                sharedPreferences.getString(SharedPreferencesEnum.LASTNAME.string, ""))
         // Load email
-        navHeaderEmail.text = sharedPreferences.getString("EMAIL", "")
+        navHeaderEmail.text = sharedPreferences.getString(SharedPreferencesEnum.EMAIL.string, "")
 
         navView.setNavigationItemSelectedListener(this)
         if (savedInstanceState == null) {
@@ -178,7 +179,7 @@ class MainActivity :
                         openDetailFragment(
                         DateSelectorFragment.newInstance(
                             date,
-                            sharedPreferences.getString("ID", "")!!
+                            sharedPreferences.getString(SharedPreferencesEnum.ID.string, "")!!
                         )
                         )
                     }
@@ -207,12 +208,12 @@ class MainActivity :
             R.id.nav_calendar -> openDetailFragment(
                 DateSelectorFragment.newInstance(
                     DateTime.now(),
-                    sharedPreferences.getString("ID", "")!!
+                    sharedPreferences.getString(SharedPreferencesEnum.ID.string, "")!!
                 )
             )
             R.id.nav_logout -> {
                 // Logout
-                val sharedPref = getSharedPreferences("USER_CREDENTIALS", Context.MODE_PRIVATE)
+                val sharedPref = getSharedPreferences(SharedPreferencesEnum.PREFNAME.toString(), Context.MODE_PRIVATE)
                 sharedPref.edit().clear().apply()
                 // Open AuthActivity
                 val intent = Intent(this, AuthActivity::class.java)
@@ -226,7 +227,7 @@ class MainActivity :
     }
 
     private fun openDetailFragment(newFragment: Fragment) {
-        if (twoPane && sharedPreferences.getBoolean("ADMIN", false)) {
+        if (twoPane && sharedPreferences.getBoolean(SharedPreferencesEnum.ADMIN.string, false)) {
             this.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.main_detail_container, newFragment)
