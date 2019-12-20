@@ -36,6 +36,7 @@ import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.user_list.*
 import org.joda.time.DateTime
+import org.koin.android.viewmodel.ext.android.getViewModel
 import java.util.*
 
 
@@ -276,7 +277,7 @@ class MainActivity :
         if(!twoPane)
         user_list_container.visibility = View.VISIBLE
         clientsListView = findViewById(R.id.user_list)
-        val clients = UserViewModel().getClients().blockingFirst()
+        val clients = getViewModel<UserViewModel>().getClients().blockingFirst()
         val adapter = UserAdapter(this.applicationContext, clients)
         clientsListView.adapter = adapter
         clientsListView.setOnItemClickListener { parent, view, position, id ->

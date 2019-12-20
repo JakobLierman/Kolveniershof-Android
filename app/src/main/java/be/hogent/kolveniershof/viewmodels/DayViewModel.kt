@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import be.hogent.kolveniershof.api.KolvApi
+import be.hogent.kolveniershof.model.Comment
 import be.hogent.kolveniershof.model.Workday
 import be.hogent.kolveniershof.repository.KolvRepository
 import com.orhanobut.logger.Logger
