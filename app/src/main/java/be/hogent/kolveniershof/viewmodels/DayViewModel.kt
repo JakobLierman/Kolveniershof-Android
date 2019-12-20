@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import be.hogent.kolveniershof.api.KolvApi
 import be.hogent.kolveniershof.model.Comment
 import be.hogent.kolveniershof.model.Workday
-import be.hogent.kolveniershof.repository.KolvRepository
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

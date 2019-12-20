@@ -30,10 +30,6 @@ data class User(
     val email: String? = null,
     @field:Json(name = "admin")
     val isAdmin: Boolean = false,
-    @field:Json(name = "birthday")
-    val birthday: Date,
-    @field:Json(name = "absentDates")
-    val absentDates: MutableList<Date> = mutableListOf(),
     @field:Json(name = "picture")
     val imgUrl: String? = null,
     @field:Json(name = "token")

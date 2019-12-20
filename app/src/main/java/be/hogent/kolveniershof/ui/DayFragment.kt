@@ -185,9 +185,7 @@ class DayFragment : Fragment() {
         if (isEmpty) showEmptyDay(view, false)
         viewModel.workday.observe(this, Observer { workday ->
             when {
-                isWeekend!! -> showWeekend(
-                    view,
-                    workday)
+                isWeekend!! -> setOnclickListenerComments(view, workday)
                 workday.isHoliday!! -> showEmptyDay(view, true)
                 else -> {
                     if (workday.morningBusses.isNullOrEmpty())
@@ -207,7 +205,6 @@ class DayFragment : Fragment() {
                         showBus(view, null, false)
                     else
                         showBus(view, workday.eveningBusses[0], false)
-
                     setOnclickListenerComments(view,workday)
                 }
             }
@@ -248,9 +245,6 @@ class DayFragment : Fragment() {
         }
     }
 
-    private fun showWeekend(view: View, workday: Workday) {
-        setOnclickListenerComments(view,workday)
-    }
     private fun setOnclickListenerComments(view: View, workday: Workday){
         val comments = workday.comments
         inputComment = view.findViewById(R.id.input_comment)
@@ -262,39 +256,28 @@ class DayFragment : Fragment() {
 
         try {
             buttonSendComment = view.findViewById(R.id.buttonSendComment)
+            buttonSendComment.setOnClickListener {
+                if (checkCommentIsEmpty(userComment)) {
+                    viewModel.postComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, inputComment.text.toString())
+                } else {
+                    userComment!!.comment = inputComment.text.toString()
+                    viewModel.patchComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, userComment)
+                }
+            }
         }catch (e : Exception) {
             inputComment.setOnEditorActionListener{ v, actionId, event ->
                         if (checkCommentIsEmpty(userComment) /*&& !isAdmin*/) {
-                            addNewComment(workday.id, inputComment)
+                            viewModel.postComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, inputComment.text.toString())
                         } else {
                             userComment!!.comment = inputComment.text.toString()
                             viewModel.patchComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, userComment)
                         }
-
                     true
-
             }
         }
-        buttonSendComment.setOnClickListener {
-            if (checkCommentIsEmpty(userComment) /*&& !isAdmin*/) {
-                addNewComment(workday.id, inputComment)
-            } else {
-                userComment!!.comment = inputComment.text.toString()
-                viewModel.patchComment(sharedPrefs.getString("TOKEN", "")!!, workday.id, userComment)
-            }
-        }
-
-        }
-
-    private fun addNewComment(
-        workdayId: String,
-        userComment: TextInputEditText
-    ) {
-        viewModel.postComment(sharedPrefs.getString("TOKEN", "")!!, workdayId,userComment.text.toString())
     }
 
     private fun checkCommentIsEmpty(userComment: Comment?): Boolean {
-
         if (userComment == null) {
             return true
         }
